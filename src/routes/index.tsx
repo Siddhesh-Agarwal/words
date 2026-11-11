@@ -35,7 +35,7 @@ const games: HomeGame[] = [
     id: 'word-ladder',
     title: 'Word Ladder',
     description: 'Change one letter at a time to reach the target word.',
-    available: false,
+    available: true,
     to: '/game/word-ladder',
   },
   {
@@ -49,6 +49,9 @@ const games: HomeGame[] = [
 
 function Home() {
   const [wordlePuzzleNo] = useState(() => todayPuzzleNumber('wordle'))
+  const [wordLadderPuzzleNo] = useState(() =>
+    todayPuzzleNumber('word-ladder'),
+  )
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10">
@@ -81,7 +84,11 @@ function Home() {
                   ? wordlePuzzleNo >= 0
                     ? `Puzzle #${wordlePuzzleNo}`
                     : 'Starts soon'
-                  : 'This game is still in development.'}
+                  : game.id === 'word-ladder'
+                    ? wordLadderPuzzleNo >= 0
+                      ? `Puzzle #${wordLadderPuzzleNo}`
+                      : 'Starts soon'
+                    : 'This game is still in development.'}
               </p>
             </CardContent>
             <CardFooter>

@@ -1,8 +1,8 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import { Share2Icon } from 'lucide-react'
+import { GameCard } from '@/components/game-card'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
   CardAction,
   CardContent,
   CardDescription,
@@ -17,32 +17,6 @@ import { WORD_LENGTH } from '@/games/wordle/logic'
 import { isTerminal } from '@/games/wordle/state'
 import { useWordleGame } from '@/games/wordle/use-wordle-game'
 
-const CORNERS = [
-  'top-[-7px] left-[-7px] border-t-2 border-l-2',
-  'top-[-7px] right-[-7px] border-t-2 border-r-2',
-  'bottom-[-7px] left-[-7px] border-b-2 border-l-2',
-  'bottom-[-7px] right-[-7px] border-b-2 border-r-2',
-]
-
-function WordleCard({ children }: { children: ReactNode }) {
-  return (
-    <div className="mx-auto w-full max-w-lg px-4 py-8">
-      <div className="relative">
-        {CORNERS.map((className) => (
-          <span
-            key={className}
-            aria-hidden="true"
-            className={`pointer-events-none absolute size-3 border-foreground ${className}`}
-          />
-        ))}
-        <Card className="border-2 border-foreground bg-card ring-0 shadow-[6px_6px_0_hsl(var(--ink)/0.15)] [--card-spacing:1.5rem]">
-          {children}
-        </Card>
-      </div>
-    </div>
-  )
-}
-
 export function WordlePage() {
   const game = useWordleGame()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -53,19 +27,19 @@ export function WordlePage() {
 
   if (!game.launchReady) {
     return (
-      <WordleCard>
+      <GameCard>
         <CardHeader>
           <CardTitle role="heading" aria-level={1}>
             Wordle
           </CardTitle>
           <CardDescription>The first puzzle starts soon.</CardDescription>
         </CardHeader>
-      </WordleCard>
+      </GameCard>
     )
   }
 
   return (
-    <WordleCard>
+    <GameCard>
       <CardHeader>
         <CardTitle role="heading" aria-level={1}>
           Wordle
@@ -139,6 +113,6 @@ export function WordlePage() {
           {game.message}
         </p>
       </CardFooter>
-    </WordleCard>
+    </GameCard>
   )
 }
