@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createInitialStats } from '@/games/wordle/state'
-import { recordWordleResult, wordleStatsStore } from '@/games/wordle/stats-store'
+import {
+  recordWordleResult,
+  wordleStatsStore,
+} from '@/games/wordle/stats-store'
 
 beforeEach(() => {
   wordleStatsStore.setState(() => createInitialStats())

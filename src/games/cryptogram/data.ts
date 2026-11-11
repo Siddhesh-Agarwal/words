@@ -1,5 +1,5 @@
-import quotesJson from '@/data/cryptogram-quotes.json'
 import { puzzleWeekday } from '@/core/date'
+import quotesJson from '@/data/cryptogram-quotes.json'
 
 export type CryptogramCategory = 'quote' | 'proverb' | 'tech'
 

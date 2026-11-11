@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
 import { Share2Icon, Undo2Icon } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { GameCard } from '@/components/game-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -33,9 +33,7 @@ export function WordLadderPage() {
           <CardTitle role="heading" aria-level={1}>
             Word Ladder
           </CardTitle>
-          <CardDescription>
-            The ladder schedule is complete.
-          </CardDescription>
+          <CardDescription>The ladder schedule is complete.</CardDescription>
         </CardHeader>
       </GameCard>
     )

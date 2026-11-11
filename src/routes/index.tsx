@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,41 +20,37 @@ type HomeGame = {
   description: string
   available: boolean
   to: '/game/wordle' | '/game/word-ladder' | '/game/cryptogram'
+  puzzleNo: number
 }
 
-const games: HomeGame[] = [
-  {
-    id: 'wordle',
-    title: 'Wordle',
-    description: 'Guess the five-letter word in six tries.',
-    available: true,
-    to: '/game/wordle',
-  },
-  {
-    id: 'word-ladder',
-    title: 'Word Ladder',
-    description: 'Change one letter at a time to reach the target word.',
-    available: true,
-    to: '/game/word-ladder',
-  },
-  {
-    id: 'cryptogram',
-    title: 'Cryptogram',
-    description: 'Decode a substitution cipher quote, proverb, or tech quote.',
-    available: true,
-    to: '/game/cryptogram',
-  },
-]
-
 function Home() {
-  const [wordlePuzzleNo] = useState(() => todayPuzzleNumber('wordle'))
-  const [wordLadderPuzzleNo] = useState(() =>
-    todayPuzzleNumber('word-ladder'),
-  )
-  const [cryptogramPuzzleNo] = useState(() =>
-    todayPuzzleNumber('cryptogram'),
-  )
-
+  const games: HomeGame[] = [
+    {
+      id: 'wordle',
+      title: 'Wordle',
+      description: 'Guess the five-letter word in six tries.',
+      available: true,
+      to: '/game/wordle',
+      puzzleNo: todayPuzzleNumber('wordle'),
+    },
+    {
+      id: 'word-ladder',
+      title: 'Word Ladder',
+      description: 'Change one letter at a time to reach the target word.',
+      available: true,
+      to: '/game/word-ladder',
+      puzzleNo: todayPuzzleNumber('word-ladder'),
+    },
+    {
+      id: 'cryptogram',
+      title: 'Cryptogram',
+      description:
+        'Decode a substitution cipher quote, proverb, or tech quote.',
+      available: true,
+      to: '/game/cryptogram',
+      puzzleNo: todayPuzzleNumber('cryptogram'),
+    },
+  ]
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10">
       <div className="flex max-w-2xl flex-col gap-2">
@@ -76,24 +71,14 @@ function Home() {
               </CardTitle>
               <CardDescription>{game.description}</CardDescription>
               <CardAction>
-                <Badge variant={game.available ? 'default' : 'secondary'}>
-                  {game.available ? 'Playable' : 'Soon'}
-                </Badge>
+                {!game.available && (
+                  <Badge variant="secondary">Coming soon</Badge>
+                )}
               </CardAction>
             </CardHeader>
             <CardContent className="flex-1">
               <p className="text-sm text-muted-foreground">
-                {game.id === 'wordle'
-                  ? wordlePuzzleNo >= 0
-                    ? `Puzzle #${wordlePuzzleNo}`
-                    : 'Starts soon'
-                  : game.id === 'word-ladder'
-                    ? wordLadderPuzzleNo >= 0
-                      ? `Puzzle #${wordLadderPuzzleNo}`
-                      : 'Starts soon'
-                    : cryptogramPuzzleNo >= 0
-                      ? `Puzzle #${cryptogramPuzzleNo}`
-                      : 'Starts soon'}
+                {game.puzzleNo > 0 ? `Puzzle #${game.puzzleNo}` : 'Starts soon'}
               </p>
             </CardContent>
             <CardFooter>

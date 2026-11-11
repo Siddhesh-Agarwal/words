@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { readJson, storageKey, writeJson, type StorageLike } from '@/core/storage'
+import {
+  readJson,
+  type StorageLike,
+  storageKey,
+  writeJson,
+} from '@/core/storage'
 
 function memoryStorage(): StorageLike & { removed: string[] } {
   const values = new Map<string, string>()

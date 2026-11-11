@@ -17,10 +17,7 @@ type HelpDialogProps = {
   onToggleHardMode: () => void
 }
 
-export function HelpDialog({
-  hardMode,
-  onToggleHardMode,
-}: HelpDialogProps) {
+export function HelpDialog({ hardMode, onToggleHardMode }: HelpDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>

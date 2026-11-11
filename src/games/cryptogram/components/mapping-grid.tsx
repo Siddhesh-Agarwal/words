@@ -1,5 +1,5 @@
-import { useRef, type KeyboardEvent } from 'react'
 import { cn } from 'cn'
+import { type KeyboardEvent, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { normalizeMapping } from '@/games/cryptogram/cipher'
 

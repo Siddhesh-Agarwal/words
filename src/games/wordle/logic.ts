@@ -30,11 +30,19 @@ export function scoreGuess(guess: string, answer: string): LetterState[] {
 }
 
 export function normalizeGuessInput(value: string): string {
-  return value.toLowerCase().replace(/[^a-z]/g, '').slice(0, WORD_LENGTH)
+  return value
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
+    .slice(0, WORD_LENGTH)
 }
 
-export function isValidGuess(guess: string, allowed: ReadonlySet<string>): boolean {
-  return guess.length === WORD_LENGTH && /^[a-z]+$/.test(guess) && allowed.has(guess)
+export function isValidGuess(
+  guess: string,
+  allowed: ReadonlySet<string>,
+): boolean {
+  return (
+    guess.length === WORD_LENGTH && /^[a-z]+$/.test(guess) && allowed.has(guess)
+  )
 }
 
 export function isWinning(guess: string, answer: string): boolean {

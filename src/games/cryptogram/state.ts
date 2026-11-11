@@ -1,9 +1,9 @@
 import {
   browserStorage,
   readJson,
+  type StorageLike,
   storageKey,
   writeJson,
-  type StorageLike,
 } from '@/core/storage'
 
 export const MAX_HINTS = 3
@@ -109,7 +109,9 @@ export function recordResult(
     currentStreak,
     maxStreak: Math.max(stats.maxStreak, currentStreak),
     bestHints:
-      stats.bestHints === null ? hintsUsed : Math.min(stats.bestHints, hintsUsed),
+      stats.bestHints === null
+        ? hintsUsed
+        : Math.min(stats.bestHints, hintsUsed),
     perfect: stats.perfect + (hintsUsed === 0 ? 1 : 0),
     lastPlayedPuzzleNo: puzzleNo,
   }

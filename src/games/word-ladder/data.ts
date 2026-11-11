@@ -1,5 +1,5 @@
-import dictionaryJson from '@/data/ladder-dictionary.json'
 import manifestJson from '@/data/ladder/manifest.json'
+import dictionaryJson from '@/data/ladder-dictionary.json'
 
 export type LadderPair = {
   start: string

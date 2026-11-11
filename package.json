@@ -12,9 +12,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "biome format",
-    "lint": "biome lint",
-    "check": "biome check"
+    "format": "biome format --fix",
+    "lint": "biome lint --fix",
+    "check": "biome check --fix"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

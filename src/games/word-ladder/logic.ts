@@ -5,7 +5,10 @@ export type LadderStepError =
   | 'repeat'
   | null
 
-export function normalizeLadderInput(value: string, wordLength: number): string {
+export function normalizeLadderInput(
+  value: string,
+  wordLength: number,
+): string {
   return value
     .toLowerCase()
     .replace(/[^a-z]/g, '')

@@ -1,10 +1,6 @@
-import { CheckIcon, MinusIcon, XIcon } from 'lucide-react'
 import { cn } from 'cn'
-import {
-  scoreGuess,
-  WORD_LENGTH,
-  type LetterState,
-} from '@/games/wordle/logic'
+import { CheckIcon, MinusIcon, XIcon } from 'lucide-react'
+import { type LetterState, scoreGuess, WORD_LENGTH } from '@/games/wordle/logic'
 
 const ROW_KEYS = ['row-0', 'row-1', 'row-2', 'row-3', 'row-4', 'row-5']
 const COLUMN_KEYS = ['col-0', 'col-1', 'col-2', 'col-3', 'col-4']

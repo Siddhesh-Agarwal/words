@@ -89,7 +89,9 @@ export function CryptogramPage() {
           <div className="rounded-md border border-correct bg-secondary p-3">
             <p className="text-sm italic">“{puzzle.quote.text}”</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              — {puzzle.quote.attribution ?? CATEGORY_LABELS[puzzle.quote.category]}
+              —{' '}
+              {puzzle.quote.attribution ??
+                CATEGORY_LABELS[puzzle.quote.category]}
             </p>
           </div>
         ) : null}

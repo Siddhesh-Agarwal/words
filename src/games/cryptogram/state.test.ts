@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import type { StorageLike } from '@/core/storage'
 import {
-  MAX_HINTS,
   applyHint,
   applyRevealed,
   createInitialState,
   createInitialStats,
   loadState,
   loadStats,
+  MAX_HINTS,
   recordResult,
   saveState,
   saveStats,

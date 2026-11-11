@@ -18,8 +18,12 @@ function epochDay(game: GameId): number {
   return calendarDayNumber(year, month - 1, day)
 }
 
-export function puzzleNumberFor(game: GameId, date = new Date()): number {
-  return calendarDayNumber(date.getFullYear(), date.getMonth(), date.getDate()) - epochDay(game)
+export function puzzleNumberFor(game: GameId, date: Date): number {
+  return (
+    calendarDayNumber(date.getFullYear(), date.getMonth(), date.getDate()) -
+    epochDay(game) +
+    1
+  )
 }
 
 export function todayPuzzleNumber(game: GameId): number {
@@ -28,7 +32,8 @@ export function todayPuzzleNumber(game: GameId): number {
 
 export function puzzleWeekday(game: GameId, puzzleNo: number): number {
   const [year, month, day] = EPOCHS[game].split('-').map(Number)
-  const date = new Date(year, month - 1, day + puzzleNo)
+  // Puzzle #1 lands on the epoch, so the offset is zero-based.
+  const date = new Date(year, month - 1, day + puzzleNo - 1)
   return (date.getDay() + 6) % 7
 }
 

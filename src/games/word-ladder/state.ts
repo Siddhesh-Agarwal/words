@@ -1,9 +1,9 @@
 import {
   browserStorage,
   readJson,
+  type StorageLike,
   storageKey,
   writeJson,
-  type StorageLike,
 } from '@/core/storage'
 
 export type LadderState = {

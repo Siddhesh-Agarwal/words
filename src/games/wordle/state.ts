@@ -1,9 +1,9 @@
 import {
   browserStorage,
   readJson,
+  type StorageLike,
   storageKey,
   writeJson,
-  type StorageLike,
 } from '@/core/storage'
 
 export type WordleStatus = 'playing' | 'won' | 'lost'
@@ -48,7 +48,11 @@ export function isTerminal(status: WordleStatus): boolean {
   return status !== 'playing'
 }
 
-export function addGuess(state: WordleState, guess: string, answer: string): WordleState {
+export function addGuess(
+  state: WordleState,
+  guess: string,
+  answer: string,
+): WordleState {
   const guesses = [...state.guesses, guess]
   const status: WordleStatus =
     guess === answer ? 'won' : guesses.length >= 6 ? 'lost' : 'playing'
@@ -88,8 +92,12 @@ function isWordleState(value: unknown): value is WordleState {
   return (
     Number.isInteger(state.puzzleNo) &&
     Array.isArray(state.guesses) &&
-    state.guesses.every((guess) => typeof guess === 'string' && guess.length === 5) &&
-    (state.status === 'playing' || state.status === 'won' || state.status === 'lost') &&
+    state.guesses.every(
+      (guess) => typeof guess === 'string' && guess.length === 5,
+    ) &&
+    (state.status === 'playing' ||
+      state.status === 'won' ||
+      state.status === 'lost') &&
     typeof state.hardMode === 'boolean'
   )
 }
@@ -104,8 +112,11 @@ function isWordleStats(value: unknown): value is WordleStats {
     Number.isInteger(stats.maxStreak) &&
     Array.isArray(stats.distribution) &&
     stats.distribution.length === 6 &&
-    stats.distribution.every((count) => Number.isInteger(count) && count >= 0) &&
-    (stats.lastPlayedPuzzleNo === null || Number.isInteger(stats.lastPlayedPuzzleNo))
+    stats.distribution.every(
+      (count) => Number.isInteger(count) && count >= 0,
+    ) &&
+    (stats.lastPlayedPuzzleNo === null ||
+      Number.isInteger(stats.lastPlayedPuzzleNo))
   )
 }
 

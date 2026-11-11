@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import type { StorageLike } from '@/core/storage'
 import {
   addGuess,
   createInitialState,
@@ -9,7 +10,6 @@ import {
   saveState,
   saveStats,
 } from '@/games/wordle/state'
-import type { StorageLike } from '@/core/storage'
 
 function memoryStorage(): StorageLike {
   const values = new Map<string, string>()
@@ -41,7 +41,14 @@ describe('Wordle state', () => {
     expect(won.guesses).toEqual(['crane'])
 
     let lost = createInitialState(0)
-    for (const guess of ['aaaaa', 'bbbbb', 'ccccc', 'ddddd', 'eeeee', 'fffff']) {
+    for (const guess of [
+      'aaaaa',
+      'bbbbb',
+      'ccccc',
+      'ddddd',
+      'eeeee',
+      'fffff',
+    ]) {
       lost = addGuess(lost, guess, 'crane')
     }
     expect(lost.status).toBe('lost')

@@ -14,7 +14,7 @@ export function SiteHeader() {
         </Button>
         <nav aria-label="Game navigation" className="flex items-center gap-1">
           <a
-            className={buttonVariants({ variant: "ghost", size: "sm" })}
+            className={buttonVariants({ variant: 'ghost', size: 'sm' })}
             href="https://github.com/Siddhesh-Agarwal/words"
             target="_blank"
             rel="noopener noreferrer"

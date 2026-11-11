@@ -41,7 +41,9 @@ export function encodeText(text: string, cipher: Cipher): string {
 }
 
 export function usedCipherLetters(text: string): string[] {
-  return [...new Set([...text.toUpperCase()].filter((char) => /[A-Z]/.test(char)))].sort()
+  return [
+    ...new Set([...text.toUpperCase()].filter((char) => /[A-Z]/.test(char))),
+  ].sort()
 }
 
 export function letterFrequency(text: string): Map<string, number> {
@@ -97,5 +99,8 @@ export function isSolved(
 }
 
 export function normalizeMapping(value: string): string {
-  return value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 1)
+  return value
+    .toUpperCase()
+    .replace(/[^A-Z]/g, '')
+    .slice(0, 1)
 }

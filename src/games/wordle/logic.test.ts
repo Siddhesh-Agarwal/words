@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  isWinning,
   isValidGuess,
+  isWinning,
   normalizeGuessInput,
   scoreGuess,
   validateHardMode,

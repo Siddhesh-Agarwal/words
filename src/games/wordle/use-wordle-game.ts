@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useStore } from '@tanstack/react-store'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { resolvePuzzleNumber } from '@/core/date'
 import { shareText } from '@/core/share'
@@ -125,7 +125,9 @@ export function useWordleGame(): WordleGame {
       if (event.metaKey || event.ctrlKey || event.altKey) return
       if (
         event.target instanceof HTMLElement &&
-        event.target.closest('button, a, input, textarea, select, [role="dialog"]')
+        event.target.closest(
+          'button, a, input, textarea, select, [role="dialog"]',
+        )
       ) {
         return
       }

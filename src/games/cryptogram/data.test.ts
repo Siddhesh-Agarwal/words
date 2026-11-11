@@ -32,10 +32,10 @@ describe('Cryptogram data', () => {
   })
 
   it('selects the right tier and rotates within it', () => {
-    const wednesday = quoteForPuzzle(0)
-    const sunday = quoteForPuzzle(4)
-    const monday = quoteForPuzzle(5)
-    const nextWednesday = quoteForPuzzle(7)
+    const wednesday = quoteForPuzzle(1)
+    const sunday = quoteForPuzzle(5)
+    const monday = quoteForPuzzle(6)
+    const nextWednesday = quoteForPuzzle(8)
 
     expect(wednesday.tier).toBe('medium')
     expect(wednesday.quote.text.length).toBeGreaterThanOrEqual(60)
@@ -58,9 +58,9 @@ describe('Cryptogram data', () => {
     const ids = (puzzleNos: number[]) =>
       puzzleNos.map((puzzleNo) => quoteForPuzzle(puzzleNo).quote.id)
 
-    const short = ids([5, 6, 12, 13])
-    const medium = ids([7, 8, 9])
-    const long = ids([10, 11])
+    const short = ids([6, 7, 13, 14])
+    const medium = ids([8, 9, 10])
+    const long = ids([11, 12])
 
     expect(new Set(short).size).toBe(short.length)
     expect(new Set(medium).size).toBe(medium.length)

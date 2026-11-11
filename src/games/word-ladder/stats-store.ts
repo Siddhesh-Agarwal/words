@@ -1,9 +1,9 @@
 import { Store } from '@tanstack/store'
 import {
+  type LadderStats,
   loadStats,
   recordResult,
   saveStats,
-  type LadderStats,
 } from '@/games/word-ladder/state'
 
 export const ladderStatsStore = new Store<LadderStats>(loadStats())

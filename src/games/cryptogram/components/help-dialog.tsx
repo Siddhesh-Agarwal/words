@@ -35,8 +35,8 @@ export function HelpDialog() {
         </ul>
 
         <p className="text-sm text-muted-foreground">
-          Stuck? Letter counts under each cipher letter help with common
-          letters like E and T.
+          Stuck? Letter counts under each cipher letter help with common letters
+          like E and T.
         </p>
       </DialogContent>
     </Dialog>

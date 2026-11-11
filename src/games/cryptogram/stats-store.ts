@@ -1,9 +1,9 @@
 import { Store } from '@tanstack/store'
 import {
+  type CryptogramStats,
   loadStats,
   recordResult,
   saveStats,
-  type CryptogramStats,
 } from '@/games/cryptogram/state'
 
 export const cryptogramStatsStore = new Store<CryptogramStats>(loadStats())

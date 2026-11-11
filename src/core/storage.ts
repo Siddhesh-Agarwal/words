@@ -21,7 +21,10 @@ export function browserStorage(): StorageLike | null {
   }
 }
 
-export function readJson<T>(storage: StorageLike | null, key: string): T | null {
+export function readJson<T>(
+  storage: StorageLike | null,
+  key: string,
+): T | null {
   if (!storage) return null
   try {
     const raw = storage.getItem(key)
@@ -37,7 +40,11 @@ export function readJson<T>(storage: StorageLike | null, key: string): T | null 
   }
 }
 
-export function writeJson(storage: StorageLike | null, key: string, value: unknown): boolean {
+export function writeJson(
+  storage: StorageLike | null,
+  key: string,
+  value: unknown,
+): boolean {
   if (!storage) return false
   try {
     storage.setItem(key, JSON.stringify(value))
