@@ -47,6 +47,12 @@ class LadderGeneratorTests(unittest.TestCase):
         lines = "".join(f"{word}\t10\n" for word in CHAIN + ["cccc"])
         (self.source / "words-4.tsv").write_text(lines, encoding="utf-8")
 
+    def test_minify_emits_one_line_json(self):
+        files = build(self.source, minify=True)
+        for path, text in files.items():
+            self.assertEqual(text.count("\n"), 1, path)
+            self.assertNotIn("  ", text, path)
+
     def test_build_is_deterministic(self):
         first = build(self.source)
         second = build(self.source)

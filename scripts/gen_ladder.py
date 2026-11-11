@@ -18,7 +18,7 @@ CHUNK_SIZE = 3650
 PAIR_SEED = "words:v1:ladder:pairs"
 
 
-def build(source_dir: Path) -> dict[Path, str]:
+def build(source_dir: Path, *, minify: bool = False) -> dict[Path, str]:
     pool = load_pool(source_dir / "words-4.tsv", 4)
     graph = build_graph(words_at_most(pool, DICTIONARY_MAX_SIZE))
     dictionary = sorted(largest_component(graph))
@@ -28,7 +28,7 @@ def build(source_dir: Path) -> dict[Path, str]:
     chunks = chunked(ordered, CHUNK_SIZE)
 
     files: dict[Path, str] = {
-        Path("ladder-dictionary.json"): dumps(dictionary),
+        Path("ladder-dictionary.json"): dumps(dictionary, compact=minify),
         Path("ladder/manifest.json"): dumps(
             {
                 "version": 1,
@@ -41,7 +41,8 @@ def build(source_dir: Path) -> dict[Path, str]:
                 "endpointMaxSize": ENDPOINT_MAX_SIZE,
                 "dictionaryMaxSize": DICTIONARY_MAX_SIZE,
                 "seed": PAIR_SEED,
-            }
+            },
+            compact=minify,
         ),
     }
     for index, chunk in enumerate(chunks):

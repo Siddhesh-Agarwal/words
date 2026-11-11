@@ -24,6 +24,12 @@ class WordleTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+    def test_minify_emits_one_line_json(self):
+        files = build(self.source, minify=True)
+        for text in files.values():
+            self.assertEqual(text.count("\n"), 1)
+            self.assertNotIn("  ", text)
+
     def test_build_is_deterministic_and_answers_are_a_subset(self):
         first = build(self.source)
         second = build(self.source)

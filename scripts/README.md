@@ -54,6 +54,16 @@ uv run words-data check --tarball /path/to/scowl-2020.12.07.tar.gz
 
 `generate --only wordle|ladder|crypto` regenerates one dataset. `--check` compares bytes and reports stale ladder chunks.
 
+To write compact JSON, add `--minify`:
+
+```sh
+uv run words-data generate --minify
+uv run words-data generate --check --minify
+uv run words-data check --minify
+```
+
+Minification changes formatting only, never puzzle content or ordering. Ladder chunks are already compact. If you commit minified data, pass `--minify` to future checks.
+
 ## Output
 
 ```text

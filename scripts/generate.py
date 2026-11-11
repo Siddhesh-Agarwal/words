@@ -8,16 +8,22 @@ from scripts.lib.jsonio import check_text, write_text
 VALID_ONLY = {"all", "wordle", "ladder", "crypto"}
 
 
-def collect(only: str, source_dir: Path, quotes_source: Path) -> dict[Path, str]:
+def collect(
+    only: str,
+    source_dir: Path,
+    quotes_source: Path,
+    *,
+    minify: bool = False,
+) -> dict[Path, str]:
     if only not in VALID_ONLY:
         raise ValueError(f"unknown dataset {only!r}")
     files: dict[Path, str] = {}
     if only in {"all", "wordle"}:
-        files.update(build_wordle(source_dir))
+        files.update(build_wordle(source_dir, minify=minify))
     if only in {"all", "ladder"}:
-        files.update(build_ladder(source_dir))
+        files.update(build_ladder(source_dir, minify=minify))
     if only in {"all", "crypto"}:
-        files.update(build_cryptogram(quotes_source))
+        files.update(build_cryptogram(quotes_source, minify=minify))
     return files
 
 

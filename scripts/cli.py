@@ -72,13 +72,14 @@ def import_scowl_command(
 def generate(
     only: Only = typer.Option(Only.all, "--only", case_sensitive=False),
     check: bool = typer.Option(False, "--check", help="Compare without writing."),
+    minify: bool = typer.Option(False, "--minify", help="Write compact JSON with no indentation."),
     data_dir: Path = typer.Option(DEFAULT_DATA_DIR, "--data-dir"),
     source_dir: Path = typer.Option(DEFAULT_SOURCE_DIR, "--source-dir"),
     quotes_source: Path = typer.Option(DEFAULT_QUOTES_SOURCE, "--quotes-source"),
 ) -> None:
     """Generate the committed JSON datasets."""
     try:
-        files = collect(only.value, source_dir, quotes_source)
+        files = collect(only.value, source_dir, quotes_source, minify=minify)
     except (OSError, ValueError) as exc:
         _fail(f"error: {exc}")
 
@@ -140,6 +141,7 @@ def check(
     data_dir: Path = typer.Option(DEFAULT_DATA_DIR, "--data-dir"),
     source_dir: Path = typer.Option(DEFAULT_SOURCE_DIR, "--source-dir"),
     quotes_source: Path = typer.Option(DEFAULT_QUOTES_SOURCE, "--quotes-source"),
+    minify: bool = typer.Option(False, "--minify", help="Expect compact JSON formatting."),
     verbose: bool = typer.Option(False, "--verbose", "-v"),
 ) -> None:
     """Run drift, data, quote, and test checks without writing."""
@@ -154,7 +156,7 @@ def check(
         typer.echo("source pools ok")
 
     try:
-        files = collect("all", source_dir, quotes_source)
+        files = collect("all", source_dir, quotes_source, minify=minify)
     except (OSError, ValueError) as exc:
         _fail(f"error: {exc}")
     drift = check_files(files, data_dir, "all")

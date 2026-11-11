@@ -126,6 +126,18 @@ class CryptogramGeneratorTests(unittest.TestCase):
             self.assertTrue(any("expected a list" in error for error in errors), errors)
             self.assertEqual(counts, {"short": 0, "medium": 0, "long": 0})
 
+    def test_build_minify_emits_one_line_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "quotes.json"
+            source.write_text(
+                json.dumps([VALID_QUOTE, VALID_TECH, VALID_PROVERB]),
+                encoding="utf-8",
+            )
+            files = build(source, minify=True)
+            for text in files.values():
+                self.assertEqual(text.count("\n"), 1)
+                self.assertNotIn("  ", text)
+
     def test_build_strips_source_and_is_deterministic(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "quotes.json"
