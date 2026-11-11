@@ -18,7 +18,7 @@ function RootComponent() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="border-t py-6">
+      <footer className="border-t py-6 bg-background">
         <div className="mx-auto w-full max-w-5xl px-4 text-center text-sm text-muted-foreground">
           One puzzle a day.
         </div>
