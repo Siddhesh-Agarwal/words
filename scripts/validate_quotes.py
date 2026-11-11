@@ -1,20 +1,32 @@
 import argparse
-import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lib.jsonio import load_json
 from lib.quotes import tier_counts, validate_entries, validate_output
 
 MIN_QUOTES = 45
 MIN_PER_TIER = 10
 
 
+def _load_list(path: Path, label: str, errors: list[str]) -> list:
+    try:
+        data = load_json(path)
+    except (OSError, ValueError) as exc:
+        errors.append(f"{label}: {exc}")
+        return []
+    if not isinstance(data, list):
+        errors.append(f"{label}: expected a list")
+        return []
+    return data
+
+
 def validate_files(source: Path, output: Path) -> tuple[list[str], dict[str, int]]:
     errors: list[str] = []
-    source_entries = json.loads(source.read_text(encoding="utf-8"))
-    output_entries = json.loads(output.read_text(encoding="utf-8"))
+    source_entries = _load_list(source, "source", errors)
+    output_entries = _load_list(output, "output", errors)
     errors.extend(f"source: {error}" for error in validate_entries(source_entries, require_source=True))
     errors.extend(f"output: {error}" for error in validate_output(output_entries))
 

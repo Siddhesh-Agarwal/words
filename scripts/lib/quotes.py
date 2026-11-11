@@ -8,7 +8,7 @@ CATEGORIES = {"quote", "proverb", "tech"}
 ALLOWED_CHARS = set(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,;:'\"!?()-"
 )
-ID_RE = re.compile(r"^q\d{4}$")
+ID_RE = re.compile(r"^q[0-9]{4}$")
 NORMALIZATION = str.maketrans(
     {
         "\u2018": "'",
@@ -63,12 +63,12 @@ def validate_entry(entry: Mapping[str, Any], *, require_source: bool) -> list[st
     if category not in CATEGORIES:
         errors.append(f"category must be one of {sorted(CATEGORIES)}")
 
+    if "attribution" not in entry:
+        errors.append("attribution is required (use null for proverbs)")
     attribution = entry.get("attribution")
     if attribution is not None:
         if not isinstance(attribution, str) or not attribution.strip():
             errors.append("attribution must be null or a non-empty string")
-        elif category in {"quote", "tech"} and not attribution.strip():
-            errors.append("quote and tech entries need an attribution")
     elif category in {"quote", "tech"}:
         errors.append("quote and tech entries need an attribution")
 
@@ -119,7 +119,7 @@ def prepare_quotes(raw: Sequence[Mapping[str, Any]], seed_label: str) -> list[di
         {
             "id": entry["id"],
             "text": normalize_text(entry["text"]),
-            "attribution": entry["attribution"],
+            "attribution": entry.get("attribution"),
             "category": entry["category"],
         }
         for entry in raw
@@ -141,6 +141,8 @@ def validate_output(entries: Sequence[Mapping[str, Any]]) -> list[str]:
 def tier_counts(entries: Sequence[Mapping[str, Any]]) -> dict[str, int]:
     counts = {"short": 0, "medium": 0, "long": 0}
     for entry in entries:
+        if not isinstance(entry, Mapping):
+            continue
         text = entry.get("text", "")
         if not isinstance(text, str):
             continue

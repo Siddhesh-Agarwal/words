@@ -62,7 +62,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 
 - `scripts/validate_data.py` checks shapes, counts, uniqueness, `a-z`, answer subset, ladder connectivity and BFS par, and quote rules.
 - Stdlib `unittest` tests cover the importer, PRNG determinism, graph/BFS, quote normalization, and committed data.
-- Python standard library only. No new runtime dependencies.
+- Python 3; `ujson` is an optional build-time JSON reader with a stdlib fallback. No new app runtime dependencies.
 
 ## Non-goals
 

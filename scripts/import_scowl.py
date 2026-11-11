@@ -7,6 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lib.jsonio import write_text
 from lib.words import SCOWL_SIZES, WORD_LENGTHS
 
 SCOWL_VERSION = "2020.12.07"
@@ -112,7 +113,7 @@ def import_scowl(tarball: Path, output_dir: Path, *, verify_checksum: bool = Tru
     files = build_source_files(tarball, verify_checksum=verify_checksum)
     output_dir.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():
-        (output_dir / name).write_text(text, encoding="utf-8")
+        write_text(output_dir / name, text)
     return files
 
 
@@ -130,7 +131,12 @@ def main(argv: list[str] | None = None) -> int:
 
     files = build_source_files(args.tarball, verify_checksum=True)
     if args.check:
-        drift = [name for name, text in files.items() if not (args.output_dir / name).exists() or (args.output_dir / name).read_text(encoding="utf-8") != text]
+        drift = [
+            name
+            for name, text in files.items()
+            if not (args.output_dir / name).exists()
+            or (args.output_dir / name).read_bytes() != text.encode("utf-8")
+        ]
         if drift:
             print("drift: " + ", ".join(drift), file=sys.stderr)
             return 1
@@ -139,7 +145,7 @@ def main(argv: list[str] | None = None) -> int:
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():
-        (args.output_dir / name).write_text(text, encoding="utf-8")
+        write_text(args.output_dir / name, text)
     print(f"wrote {len(files)} files to {args.output_dir}")
     return 0
 

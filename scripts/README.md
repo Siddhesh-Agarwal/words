@@ -1,6 +1,6 @@
 # Data generation
 
-All game data is generated offline and committed under `src/data/`. The app makes no runtime data requests.
+All game data is generated offline and committed under `src/data/`. There are no API or backend calls; the current ladder chunk is loaded as a static asset on demand.
 
 ## Source
 
@@ -30,6 +30,12 @@ scripts/data/source/scowl/
 ```
 
 ## Regenerate and validate
+
+Install the build-time JSON reader (optional; the scripts fall back to the stdlib parser):
+
+```sh
+python3 -m pip install -r scripts/requirements.txt
+```
 
 ```sh
 python3 scripts/generate.py             # write all data
@@ -109,6 +115,10 @@ The authored source is `scripts/data/quotes-source.json`:
 
 To add a quote, append an entry with the next unused `qNNNN` ID, then run `generate.py --only crypto` and `validate_quotes.py`. Do not renumber existing IDs; they are stable puzzle identifiers.
 
+**Adding a quote reshuffles the entire quote pool** because the shuffle is seeded from the list contents and order. That changes every future cryptogram puzzle date. If quotes will be added after launch, freeze or version the schedule first; do not treat it as an append-only data edit.
+
 ## Deployment
 
 The data is static. On Cloudflare Pages, the 84 ladder chunks are ordinary assets; the client should load only the chunk for the current decade. No Functions, Workers, or database are needed.
+
+The chunks live under `src/data`, not `public/`. Use a Vite dynamic import or `import.meta.glob` for the current chunk; a bare `fetch("/data/ladder/000.json")` will not find them. Do not eagerly import the whole ladder directory, or Vite will bundle all 12 MB.

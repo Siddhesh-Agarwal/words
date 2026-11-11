@@ -14,6 +14,7 @@ from lib.quotes import (
     validate_entries,
     validate_output,
 )
+from validate_quotes import validate_files
 
 VALID_QUOTE = {
     "id": "q0001",
@@ -24,10 +25,10 @@ VALID_QUOTE = {
 }
 VALID_TECH = {
     "id": "q0002",
-    "text": "Simplicity is prerequisite for reliability.",
-    "attribution": "Edsger W. Dijkstra",
+    "text": "The price of reliability is the pursuit of the utmost simplicity.",
+    "attribution": "C. A. R. Hoare",
     "category": "tech",
-    "source": "EWD498",
+    "source": "The Emperor's Old Clothes, 1980 Turing Award Lecture",
 }
 VALID_PROVERB = {
     "id": "q0003",
@@ -74,6 +75,16 @@ class QuoteTextTests(unittest.TestCase):
         no_attribution = dict(VALID_TECH, attribution=None)
         self.assertTrue(validate_entries([no_attribution], require_source=True))
 
+    def test_missing_attribution_key_is_rejected(self):
+        bad = {key: value for key, value in VALID_PROVERB.items() if key != "attribution"}
+        errors = validate_entries([bad], require_source=True)
+        self.assertTrue(any("attribution is required" in error for error in errors))
+
+    def test_rejects_non_ascii_quote_ids(self):
+        bad = dict(VALID_QUOTE, id="q٠٠٠١")
+        errors = validate_entries([bad], require_source=True)
+        self.assertTrue(any("id must match" in error for error in errors))
+
     def test_rejects_duplicate_ids_and_texts(self):
         duplicate_id = dict(VALID_TECH, id=VALID_QUOTE["id"])
         self.assertTrue(validate_entries([VALID_QUOTE, duplicate_id], require_source=True))
@@ -107,6 +118,16 @@ class QuoteOutputTests(unittest.TestCase):
 
 
 class CryptogramGeneratorTests(unittest.TestCase):
+    def test_validate_files_reports_malformed_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "source.json"
+            output = Path(tmp) / "output.json"
+            source.write_text("null\n", encoding="utf-8")
+            output.write_text("null\n", encoding="utf-8")
+            errors, counts = validate_files(source, output)
+            self.assertTrue(any("expected a list" in error for error in errors), errors)
+            self.assertEqual(counts, {"short": 0, "medium": 0, "long": 0})
+
     def test_build_strips_source_and_is_deterministic(self):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "quotes.json"

@@ -1,5 +1,4 @@
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
@@ -7,9 +6,10 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lib.jsonio import load_json
 from lib.ladder import build_graph, largest_component, shortest_distances
 from lib.quotes import tier_counts, validate_output
-from lib.words import load_taboo
+from lib.words import load_pool, load_taboo, words_at_most
 
 WORD_RE = re.compile(r"^[a-z]{5}$")
 LADDER_RE = re.compile(r"^[a-z]{4}$")
@@ -39,10 +39,13 @@ def _load_json(path: Path, label: str, errors: list[str]) -> Any:
         errors.append(f"{label}: missing {path}")
         return None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        data = load_json(path)
+    except (OSError, ValueError) as exc:
         errors.append(f"{label}: invalid JSON in {path}: {exc}")
         return None
+    if data is None:
+        errors.append(f"{label}: expected a JSON value, got null")
+    return data
 
 
 def _check_word_list(entries: Any, label: str, pattern: re.Pattern[str], errors: list[str]) -> set[str]:
@@ -93,7 +96,7 @@ def validate_wordle(data_dir: Path, taboo: set[str], errors: list[str]) -> None:
         errors.append(f"wordle guesses: {len(bad_guesses)} taboo words")
 
 
-def validate_ladder(data_dir: Path, errors: list[str]) -> None:
+def validate_ladder(data_dir: Path, source_dir: Path, errors: list[str]) -> None:
     dictionary_raw = _load_json(data_dir / "ladder-dictionary.json", "ladder dictionary", errors)
     manifest = _load_json(data_dir / "ladder" / "manifest.json", "ladder manifest", errors)
     if dictionary_raw is None or manifest is None:
@@ -114,9 +117,13 @@ def validate_ladder(data_dir: Path, errors: list[str]) -> None:
         return
     expected = {
         "version": 1,
+        "dictionary": "../ladder-dictionary.json",
         "chunkSize": CHUNK_SIZE,
         "length": 4,
         "parRange": [MIN_PAR, MAX_PAR],
+        "endpointMaxSize": 20,
+        "dictionaryMaxSize": 50,
+        "seed": "words:v1:ladder:pairs",
     }
     for key, value in expected.items():
         if manifest.get(key) != value:
@@ -131,6 +138,9 @@ def validate_ladder(data_dir: Path, errors: list[str]) -> None:
 
     pairs: list[dict[str, Any]] = []
     for chunk_index, chunk_path in enumerate(chunk_paths):
+        expected_name = f"{chunk_index:03d}.json"
+        if chunk_path.name != expected_name:
+            errors.append(f"ladder chunks: expected {expected_name}, found {chunk_path.name}")
         chunk = _load_json(chunk_path, f"ladder chunk {chunk_path.name}", errors)
         if chunk is None:
             continue
@@ -158,6 +168,23 @@ def validate_ladder(data_dir: Path, errors: list[str]) -> None:
     if len(component) != len(dictionary):
         errors.append("ladder dictionary: not a single connected component")
 
+    expected_graph = None
+    expected_endpoints = dictionary
+    source_pool = source_dir / "words-4.tsv"
+    if source_pool.exists():
+        try:
+            pool = load_pool(source_pool, 4)
+        except ValueError as exc:
+            errors.append(f"ladder source: {exc}")
+        else:
+            expected_graph = build_graph(words_at_most(pool, 50))
+            expected_component = largest_component(expected_graph)
+            if set(dictionary) != expected_component:
+                errors.append("ladder dictionary: does not match the size<=50 largest component from source")
+            expected_endpoints = set(words_at_most(pool, 20)) & expected_component
+            if not expected_endpoints <= set(dictionary):
+                errors.append("ladder endpoints: source endpoints are missing from the dictionary")
+
     seen: set[tuple[str, str]] = set()
     distance_cache: dict[str, dict[str, int]] = {}
     for index, pair in enumerate(pairs):
@@ -175,6 +202,9 @@ def validate_ladder(data_dir: Path, errors: list[str]) -> None:
             continue
         if start not in dictionary or end not in dictionary:
             _add(errors, f"ladder pair {index}: endpoint is not in the dictionary")
+            continue
+        if start not in expected_endpoints or end not in expected_endpoints:
+            _add(errors, f"ladder pair {index}: endpoint is outside the size<=20 endpoint set")
             continue
         if not MIN_PAR <= par <= MAX_PAR:
             _add(errors, f"ladder pair {index}: par {par} is outside {MIN_PAR}-{MAX_PAR}")
@@ -218,7 +248,7 @@ def validate(data_dir: Path, source_dir: Path) -> list[str]:
     if not taboo_path.exists():
         errors.append(f"source: missing {taboo_path}")
     validate_wordle(data_dir, taboo, errors)
-    validate_ladder(data_dir, errors)
+    validate_ladder(data_dir, source_dir, errors)
     validate_crypto(data_dir, errors)
     return errors
 
@@ -239,11 +269,11 @@ def main(argv: list[str] | None = None) -> int:
             print(error, file=sys.stderr)
         return 1
 
-    answers = json.loads((args.data_dir / "wordle-answers.json").read_text(encoding="utf-8"))
-    guesses = json.loads((args.data_dir / "wordle-guesses.json").read_text(encoding="utf-8"))
-    dictionary = json.loads((args.data_dir / "ladder-dictionary.json").read_text(encoding="utf-8"))
-    manifest = json.loads((args.data_dir / "ladder" / "manifest.json").read_text(encoding="utf-8"))
-    quotes = json.loads((args.data_dir / "cryptogram-quotes.json").read_text(encoding="utf-8"))
+    answers = load_json(args.data_dir / "wordle-answers.json")
+    guesses = load_json(args.data_dir / "wordle-guesses.json")
+    dictionary = load_json(args.data_dir / "ladder-dictionary.json")
+    manifest = load_json(args.data_dir / "ladder" / "manifest.json")
+    quotes = load_json(args.data_dir / "cryptogram-quotes.json")
     print(
         "data ok: "
         f"wordle {len(answers)} answers / {len(guesses)} guesses; "

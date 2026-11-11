@@ -41,4 +41,4 @@ class CommittedDataTests(unittest.TestCase):
     def test_quote_counts(self):
         self.assertEqual(len(self.quotes), 60)
         self.assertEqual(Counter(entry["category"] for entry in self.quotes), {"quote": 20, "proverb": 20, "tech": 20})
-        self.assertEqual(tier_counts(self.quotes), {"short": 24, "medium": 22, "long": 14})
+        self.assertEqual(tier_counts(self.quotes), {"short": 24, "medium": 23, "long": 13})

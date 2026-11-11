@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- No new dependencies; Python standard library only.
+- No new app runtime dependencies. `ujson` is an optional build-time JSON reader with a stdlib fallback.
 - No network calls in generators or validators.
 - Every generated JSON file is committed.
 - Static site: no backend, no SSR, no runtime API calls.

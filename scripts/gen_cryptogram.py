@@ -1,18 +1,17 @@
 import argparse
-import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.jsonio import check_text, dumps, write_text
+from lib.jsonio import check_text, dumps, load_json, loads, write_text
 from lib.quotes import prepare_quotes, tier_counts
 
 QUOTE_SEED = "words:v1:cryptogram:quotes"
 
 
 def build(source_path: Path) -> dict[Path, str]:
-    raw = json.loads(source_path.read_text(encoding="utf-8"))
+    raw = load_json(source_path)
     prepared = prepare_quotes(raw, QUOTE_SEED)
     return {Path("cryptogram-quotes.json"): dumps(prepared)}
 
@@ -39,13 +38,13 @@ def main(argv: list[str] | None = None) -> int:
         if drift:
             print("drift: " + ", ".join(drift), file=sys.stderr)
             return 1
-        payload = json.loads(next(iter(files.values())))
+        payload = loads(next(iter(files.values())))
         print(f"cryptogram data is up to date ({len(payload)} quotes, {tier_counts(payload)})")
         return 0
 
     for path, text in files.items():
         write_text(args.output_dir / path, text)
-    payload = json.loads(next(iter(files.values())))
+    payload = loads(next(iter(files.values())))
     print(f"wrote {len(payload)} cryptogram quotes to {args.output_dir}")
     return 0
 
