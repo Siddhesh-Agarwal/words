@@ -3,6 +3,7 @@ import {
   EPOCHS,
   parsePuzzleOverride,
   puzzleNumberFor,
+  puzzleWeekday,
   resolvePuzzleNumber,
   type GameId,
 } from '@/core/date'
@@ -15,6 +16,16 @@ describe('puzzle dates', () => {
       expect(puzzleNumberFor(game, new Date(year, month - 1, day + 1, 0, 0, 1))).toBe(1)
       expect(puzzleNumberFor(game, new Date(year, month - 1, day - 1, 23, 59))).toBe(-1)
     }
+  })
+
+  it('maps puzzle numbers to Monday-first weekdays', () => {
+    expect(puzzleWeekday('wordle', 0)).toBe(2)
+    expect(puzzleWeekday('wordle', 1)).toBe(3)
+    expect(puzzleWeekday('wordle', 2)).toBe(4)
+    expect(puzzleWeekday('wordle', 3)).toBe(5)
+    expect(puzzleWeekday('wordle', 4)).toBe(6)
+    expect(puzzleWeekday('wordle', 5)).toBe(0)
+    expect(puzzleWeekday('wordle', 6)).toBe(1)
   })
 
   it('parses valid dev overrides', () => {

@@ -26,6 +26,12 @@ export function todayPuzzleNumber(game: GameId): number {
   return puzzleNumberFor(game, new Date())
 }
 
+export function puzzleWeekday(game: GameId, puzzleNo: number): number {
+  const [year, month, day] = EPOCHS[game].split('-').map(Number)
+  const date = new Date(year, month - 1, day + puzzleNo)
+  return (date.getDay() + 6) % 7
+}
+
 export function parsePuzzleOverride(search: string): number | null {
   const value = new URLSearchParams(search).get('puzzle')
   if (value === null || !/^\d+$/.test(value)) return null

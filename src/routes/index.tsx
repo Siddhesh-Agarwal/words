@@ -42,7 +42,7 @@ const games: HomeGame[] = [
     id: 'cryptogram',
     title: 'Cryptogram',
     description: 'Decode a substitution cipher quote, proverb, or tech quote.',
-    available: false,
+    available: true,
     to: '/game/cryptogram',
   },
 ]
@@ -51,6 +51,9 @@ function Home() {
   const [wordlePuzzleNo] = useState(() => todayPuzzleNumber('wordle'))
   const [wordLadderPuzzleNo] = useState(() =>
     todayPuzzleNumber('word-ladder'),
+  )
+  const [cryptogramPuzzleNo] = useState(() =>
+    todayPuzzleNumber('cryptogram'),
   )
 
   return (
@@ -88,7 +91,9 @@ function Home() {
                     ? wordLadderPuzzleNo >= 0
                       ? `Puzzle #${wordLadderPuzzleNo}`
                       : 'Starts soon'
-                    : 'This game is still in development.'}
+                    : cryptogramPuzzleNo >= 0
+                      ? `Puzzle #${cryptogramPuzzleNo}`
+                      : 'Starts soon'}
               </p>
             </CardContent>
             <CardFooter>
