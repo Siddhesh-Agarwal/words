@@ -12,7 +12,13 @@
     "preview": "vite preview",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check"
+    "check": "biome check",
+    "import:scowl": "python3 scripts/import_scowl.py",
+    "generate:data": "python3 scripts/generate.py",
+    "validate:data": "python3 scripts/validate_data.py",
+    "validate:quotes": "python3 scripts/validate_quotes.py",
+    "test:data": "python3 -m unittest discover -s scripts/tests -v",
+    "check:data": "python3 scripts/generate.py --check && python3 scripts/validate_data.py && python3 -m unittest discover -s scripts/tests"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

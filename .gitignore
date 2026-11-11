@@ -15,3 +15,7 @@ todos.json
 # Python
 __pycache__/
 *.pyc
+
+# SCOWL source tarballs (the tiered TSVs are committed)
+scowl-*.tar.gz
+scowl-*/
