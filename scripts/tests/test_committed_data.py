@@ -1,14 +1,12 @@
 import json
-import sys
 import unittest
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts"))
 
-from lib.quotes import tier_counts
-from validate_data import validate
+from scripts.lib.quotes import tier_counts
+from scripts.validate_data import validate
 
 DATA = ROOT / "src" / "data"
 SOURCE = ROOT / "scripts" / "data" / "source" / "scowl"

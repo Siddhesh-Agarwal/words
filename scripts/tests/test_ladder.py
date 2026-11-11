@@ -1,13 +1,11 @@
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from gen_ladder import build
-from lib.ladder import (
+from scripts.gen_ladder import build
+from scripts.lib.ladder import (
     build_graph,
     candidate_pairs,
     chunked,

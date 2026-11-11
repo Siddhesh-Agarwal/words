@@ -1,20 +1,18 @@
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from gen_cryptogram import build
-from lib.quotes import (
+from scripts.gen_cryptogram import build
+from scripts.lib.quotes import (
     normalize_text,
     prepare_quotes,
     tier_counts,
     validate_entries,
     validate_output,
 )
-from validate_quotes import validate_files
+from scripts.validate_quotes import validate_files
 
 VALID_QUOTE = {
     "id": "q0001",

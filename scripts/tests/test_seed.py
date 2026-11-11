@@ -1,10 +1,8 @@
-import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from lib.seed import Mulberry32, seed_from_label, shuffled
+from scripts.lib.seed import Mulberry32, seed_from_label, shuffled
 
 
 class SeedTests(unittest.TestCase):

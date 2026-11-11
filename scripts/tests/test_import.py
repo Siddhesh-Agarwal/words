@@ -1,13 +1,11 @@
 import io
-import sys
 import tarfile
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from import_scowl import build_source_files
+from scripts.import_scowl import build_source_files
 
 
 def make_tarball(path: Path, files: dict[str, bytes]) -> None:

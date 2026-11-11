@@ -1,12 +1,10 @@
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from gen_wordle import build
+from scripts.gen_wordle import build
 
 
 class WordleTests(unittest.TestCase):

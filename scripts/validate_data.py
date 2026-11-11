@@ -1,15 +1,11 @@
-import argparse
 import re
-import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from lib.jsonio import load_json
-from lib.ladder import build_graph, largest_component, shortest_distances
-from lib.quotes import tier_counts, validate_output
-from lib.words import load_pool, load_taboo, words_at_most
+from scripts.lib.jsonio import load_json
+from scripts.lib.ladder import build_graph, largest_component, shortest_distances
+from scripts.lib.quotes import tier_counts, validate_output
+from scripts.lib.words import load_pool, load_taboo, words_at_most
 
 WORD_RE = re.compile(r"^[a-z]{5}$")
 LADDER_RE = re.compile(r"^[a-z]{4}$")
@@ -253,35 +249,15 @@ def validate(data_dir: Path, source_dir: Path) -> list[str]:
     return errors
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Validate all committed word-game data.")
-    parser.add_argument("--data-dir", type=Path, default=Path("src/data"))
-    parser.add_argument(
-        "--source-dir",
-        type=Path,
-        default=Path("scripts/data/source/scowl"),
-    )
-    args = parser.parse_args(argv)
-
-    errors = validate(args.data_dir, args.source_dir)
-    if errors:
-        for error in errors:
-            print(error, file=sys.stderr)
-        return 1
-
-    answers = load_json(args.data_dir / "wordle-answers.json")
-    guesses = load_json(args.data_dir / "wordle-guesses.json")
-    dictionary = load_json(args.data_dir / "ladder-dictionary.json")
-    manifest = load_json(args.data_dir / "ladder" / "manifest.json")
-    quotes = load_json(args.data_dir / "cryptogram-quotes.json")
-    print(
+def summary(data_dir: Path) -> str:
+    answers = load_json(data_dir / "wordle-answers.json")
+    guesses = load_json(data_dir / "wordle-guesses.json")
+    dictionary = load_json(data_dir / "ladder-dictionary.json")
+    manifest = load_json(data_dir / "ladder" / "manifest.json")
+    quotes = load_json(data_dir / "cryptogram-quotes.json")
+    return (
         "data ok: "
         f"wordle {len(answers)} answers / {len(guesses)} guesses; "
         f"ladder {len(dictionary)} words / {manifest['totalPairs']} pairs; "
         f"quotes {len(quotes)} {tier_counts(quotes)}"
     )
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

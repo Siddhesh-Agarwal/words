@@ -2,6 +2,17 @@
 
 All game data is generated offline and committed under `src/data/`. There are no API or backend calls; the current ladder chunk is loaded as a static asset on demand.
 
+The Python tooling is a `uv` project exposed as one Typer CLI. `package.json` contains no Python commands.
+
+## Setup
+
+```sh
+uv sync
+uv run words-data --help
+```
+
+`uv` creates `.venv` from `pyproject.toml` and `uv.lock`. Add dependencies with `uv add`.
+
 ## Source
 
 SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
@@ -13,8 +24,8 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 Import or refresh the source pools:
 
 ```sh
-python3 scripts/import_scowl.py --tarball /path/to/scowl-2020.12.07.tar.gz
-python3 scripts/import_scowl.py --tarball /path/to/scowl-2020.12.07.tar.gz --check
+uv run words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz
+uv run words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz --check
 ```
 
 The importer reads `final/english-words.{10,20,35,40,50,55,60,70,80}`, keeps lowercase `a-z` words of length 3-5, records each word's minimum SCOWL size, and removes SCOWL's `misc/offensive.*` and `misc/profane.*` words. It writes:
@@ -31,31 +42,17 @@ scripts/data/source/scowl/
 
 ## Regenerate and validate
 
-Install the build-time JSON reader (optional; the scripts fall back to the stdlib parser):
-
 ```sh
-python3 -m pip install -r scripts/requirements.txt
+uv run words-data generate                 # write all data
+uv run words-data generate --check         # fail if committed data has drifted
+uv run words-data validate-data            # shapes, counts, BFS par, quote rules
+uv run words-data validate-quotes          # quote source and output
+uv run words-data test                     # unit tests
+uv run words-data check                    # drift + data + quotes + tests
+uv run words-data check --tarball /path/to/scowl-2020.12.07.tar.gz
 ```
 
-```sh
-python3 scripts/generate.py             # write all data
-python3 scripts/generate.py --check     # fail if committed data has drifted
-python3 scripts/validate_data.py        # shapes, counts, BFS par, quote rules
-python3 scripts/validate_quotes.py      # quote source and output
-python3 -m unittest discover -s scripts/tests -v
-```
-
-Or with pnpm:
-
-```sh
-pnpm generate:data
-pnpm check:data
-pnpm validate:data
-pnpm validate:quotes
-pnpm test:data
-```
-
-`generate.py --only wordle|ladder|crypto` regenerates one dataset. `--check` compares bytes and reports stale ladder chunks.
+`generate --only wordle|ladder|crypto` regenerates one dataset. `--check` compares bytes and reports stale ladder chunks.
 
 ## Output
 
@@ -113,7 +110,14 @@ The authored source is `scripts/data/quotes-source.json`:
 - Length tiers: short `< 60`, medium `60-87`, long `>= 88`.
 - Duplicate IDs and duplicate normalized texts fail validation.
 
-To add a quote, append an entry with the next unused `qNNNN` ID, then run `generate.py --only crypto` and `validate_quotes.py`. Do not renumber existing IDs; they are stable puzzle identifiers.
+To add a quote, append an entry with the next unused `qNNNN` ID, then run:
+
+```sh
+uv run words-data generate --only crypto
+uv run words-data validate-quotes
+```
+
+Do not renumber existing IDs; they are stable puzzle identifiers.
 
 **Adding a quote reshuffles the entire quote pool** because the shuffle is seeded from the list contents and order. That changes every future cryptogram puzzle date. If quotes will be added after launch, freeze or version the schedule first; do not treat it as an append-only data edit.
 

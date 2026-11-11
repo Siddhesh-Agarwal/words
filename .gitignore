@@ -19,3 +19,6 @@ __pycache__/
 # SCOWL source tarballs (the tiered TSVs are committed)
 scowl-*.tar.gz
 scowl-*/
+
+# uv virtualenv
+.venv/

@@ -1,11 +1,7 @@
-import argparse
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from lib.jsonio import load_json
-from lib.quotes import tier_counts, validate_entries, validate_output
+from scripts.lib.jsonio import load_json
+from scripts.lib.quotes import tier_counts, validate_entries, validate_output
 
 MIN_QUOTES = 45
 MIN_PER_TIER = 10
@@ -44,30 +40,3 @@ def validate_files(source: Path, output: Path) -> tuple[list[str], dict[str, int
         errors.append("output ids do not match source ids")
 
     return errors, counts
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Validate the cryptogram quote source and generated pool.")
-    parser.add_argument(
-        "--source",
-        type=Path,
-        default=Path("scripts/data/quotes-source.json"),
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("src/data/cryptogram-quotes.json"),
-    )
-    args = parser.parse_args(argv)
-
-    errors, counts = validate_files(args.source, args.output)
-    if errors:
-        for error in errors:
-            print(error, file=sys.stderr)
-        return 1
-    print(f"quotes ok ({counts['short']} short, {counts['medium']} medium, {counts['long']} long)")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

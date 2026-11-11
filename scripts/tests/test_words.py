@@ -1,11 +1,9 @@
-import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from lib.jsonio import dumps
-from lib.words import load_pool, words_at_most
+from scripts.lib.jsonio import dumps
+from scripts.lib.words import load_pool, words_at_most
 
 
 class WordPoolTests(unittest.TestCase):

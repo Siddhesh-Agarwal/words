@@ -1,14 +1,10 @@
-import argparse
 import hashlib
 import re
-import sys
 import tarfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from lib.jsonio import write_text
-from lib.words import SCOWL_SIZES, WORD_LENGTHS
+from scripts.lib.jsonio import write_text
+from scripts.lib.words import SCOWL_SIZES, WORD_LENGTHS
 
 SCOWL_VERSION = "2020.12.07"
 SCOWL_URL = (
@@ -98,7 +94,7 @@ def build_source_files(tarball: Path, *, verify_checksum: bool = True) -> dict[s
         f"- URL: {SCOWL_URL}\n"
         f"- SHA-256: {SCOWL_SHA256}\n"
         "- Licence: see `Copyright` in this directory.\n"
-        "- Import: `python3 scripts/import_scowl.py --tarball <scowl-2020.12.07.tar.gz>`\n"
+        "- Import: `uv run words-data import-scowl --tarball <scowl-2020.12.07.tar.gz>`\n"
         "- Format: `word<TAB>minimum SCOWL size`, lowercase ASCII `a-z`, "
         "no apostrophes or accents.\n"
         f"- Sizes read: {', '.join(str(size) for size in SCOWL_SIZES)}. "
@@ -115,40 +111,3 @@ def import_scowl(tarball: Path, output_dir: Path, *, verify_checksum: bool = Tru
     for name, text in files.items():
         write_text(output_dir / name, text)
     return files
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Import SCOWL final word lists into tiered TSVs.")
-    parser.add_argument("--tarball", type=Path, required=True, help="path to scowl-2020.12.07.tar.gz")
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path("scripts/data/source/scowl"),
-        help="output directory (default: scripts/data/source/scowl)",
-    )
-    parser.add_argument("--check", action="store_true", help="verify committed files without writing")
-    args = parser.parse_args(argv)
-
-    files = build_source_files(args.tarball, verify_checksum=True)
-    if args.check:
-        drift = [
-            name
-            for name, text in files.items()
-            if not (args.output_dir / name).exists()
-            or (args.output_dir / name).read_bytes() != text.encode("utf-8")
-        ]
-        if drift:
-            print("drift: " + ", ".join(drift), file=sys.stderr)
-            return 1
-        print("source pools are up to date")
-        return 0
-
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    for name, text in files.items():
-        write_text(args.output_dir / name, text)
-    print(f"wrote {len(files)} files to {args.output_dir}")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

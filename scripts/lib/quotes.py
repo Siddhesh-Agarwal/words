@@ -2,7 +2,7 @@ import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from lib.seed import shuffled
+from scripts.lib.seed import shuffled
 
 CATEGORIES = {"quote", "proverb", "tech"}
 ALLOWED_CHARS = set(

@@ -1,14 +1,12 @@
 import json
 import shutil
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts"))
 
-from validate_data import validate
+from scripts.validate_data import validate
 
 DATA = ROOT / "src" / "data"
 SOURCE = ROOT / "scripts" / "data" / "source" / "scowl"

@@ -12,7 +12,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 
 - Tarball: `https://downloads.sourceforge.net/project/wordlist/SCOWL/2020.12.07/scowl-2020.12.07.tar.gz`
 - SHA-256: `5587667caa20c4891390c2d42dbb4d5c4c3f41bee77af1457ece3ba23fb859cc`
-- One-time `scripts/import_scowl.py --tarball <path>` reads `final/english-words.{10,20,35,40,50,55,60,70,80}`, keeps lowercase `a-z` words of length 3-5, records each word's minimum SCOWL size, and drops SCOWL's `misc/offensive.*` and `profane.*` words.
+- One-time `uv run words-data import-scowl --tarball <path>` reads `final/english-words.{10,20,35,40,50,55,60,70,80}`, keeps lowercase `a-z` words of length 3-5, records each word's minimum SCOWL size, and drops SCOWL's `misc/offensive.*` and `profane.*` words.
 - Output: `scripts/data/source/scowl/words-{3,4,5}.tsv` (`word<TAB>min-size`), `taboo.txt`, `Copyright`, `SOURCE.md`. The tarball itself is not committed.
 - Verified counts: 3-letter 1,123; 4-letter 4,847; 5-letter 10,938.
 
@@ -40,7 +40,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 - Length tiers for weekday difficulty: short `< 60`, medium `60-87`, long `>= 88`.
 - Authored source: `scripts/data/quotes-source.json` with an additional `source` provenance field.
 - Generator normalizes curly quotes, em dashes, ellipses, and whitespace; strips `source`; validates.
-- `scripts/validate_quotes.py` enforces 40-120 chars, >= 15 distinct letters, ASCII letters plus basic punctuation, no digits, unique IDs/text, valid categories, and non-null attribution for `quote`/`tech`.
+- `uv run words-data validate-quotes` enforces 40-120 chars, >= 15 distinct letters, ASCII letters plus basic punctuation, no digits, unique IDs/text, valid categories, and non-null attribution for `quote`/`tech`.
 - Tech quotes are verified against primary sources; unverifiable quotes are omitted.
 
 ## Determinism
@@ -48,7 +48,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 - Seed = first 32 bits of SHA-256 of `words:v1:{game}:{dataset}`.
 - PRNG: mulberry32, shared with the JS convention. Shuffle: Fisher-Yates.
 - Re-running produces byte-identical files.
-- `scripts/generate.py --check` regenerates in memory and fails on drift.
+- `uv run words-data generate --check` regenerates in memory and fails on drift.
 - Changing the source version, filters, or a seed reorders every future puzzle; treat as a breaking change.
 
 ## Deployment
@@ -60,7 +60,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 
 ## Validation
 
-- `scripts/validate_data.py` checks shapes, counts, uniqueness, `a-z`, answer subset, ladder connectivity and BFS par, and quote rules.
+- `uv run words-data validate-data` checks shapes, counts, uniqueness, `a-z`, answer subset, ladder connectivity and BFS par, and quote rules.
 - Stdlib `unittest` tests cover the importer, PRNG determinism, graph/BFS, quote normalization, and committed data.
 - Python 3; `ujson` is an optional build-time JSON reader with a stdlib fallback. No new app runtime dependencies.
 
