@@ -12,14 +12,31 @@ describe('puzzle dates', () => {
   it('starts each game at its own epoch', () => {
     for (const game of Object.keys(EPOCHS) as GameId[]) {
       const [year, month, day] = EPOCHS[game].split('-').map(Number)
-      expect(puzzleNumberFor(game, new Date(year, month - 1, day, 12))).toBe(1)
       expect(
-        puzzleNumberFor(game, new Date(year, month - 1, day + 1, 0, 0, 1)),
+        puzzleNumberFor(game, new Date(Date.UTC(year, month - 1, day, 12))),
+      ).toBe(1)
+      expect(
+        puzzleNumberFor(
+          game,
+          new Date(Date.UTC(year, month - 1, day + 1, 0, 0, 1)),
+        ),
       ).toBe(2)
       expect(
-        puzzleNumberFor(game, new Date(year, month - 1, day - 1, 23, 59)),
+        puzzleNumberFor(
+          game,
+          new Date(Date.UTC(year, month - 1, day - 1, 23, 59)),
+        ),
       ).toBe(0)
     }
+  })
+
+  it('flips at 00:00 UTC', () => {
+    expect(
+      puzzleNumberFor('wordle', new Date(Date.UTC(2026, 10, 10, 23, 59, 59))),
+    ).toBe(0)
+    expect(
+      puzzleNumberFor('wordle', new Date(Date.UTC(2026, 10, 11, 0, 0, 0))),
+    ).toBe(1)
   })
 
   it('maps puzzle numbers to Monday-first weekdays', () => {
@@ -33,7 +50,7 @@ describe('puzzle dates', () => {
   })
 
   it('agrees with the date-to-puzzle-number mapping', () => {
-    const date = new Date(2026, 10, 18)
+    const date = new Date(Date.UTC(2026, 10, 18))
     expect(puzzleNumberFor('wordle', date)).toBe(8)
     expect(puzzleWeekday('wordle', 8)).toBe(2)
   })
@@ -47,7 +64,7 @@ describe('puzzle dates', () => {
   })
 
   it('applies the override only when allowed', () => {
-    const now = new Date(2026, 10, 20)
+    const now = new Date(Date.UTC(2026, 10, 20))
     expect(
       resolvePuzzleNumber('wordle', {
         now,
