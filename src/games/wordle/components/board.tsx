@@ -13,7 +13,7 @@ type TileState = LetterState | 'active' | 'empty'
 
 const tileClasses: Record<TileState, string> = {
   correct: 'border-primary bg-primary text-primary-foreground',
-  present: 'border-secondary bg-secondary text-secondary-foreground',
+  present: 'border-accent bg-accent text-accent-foreground',
   absent: 'border-muted bg-muted text-muted-foreground',
   active: 'border-foreground bg-background text-foreground',
   empty: 'border-border bg-background text-foreground',

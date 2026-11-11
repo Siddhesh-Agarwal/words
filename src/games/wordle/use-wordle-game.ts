@@ -5,10 +5,9 @@ import { shareText } from '@/core/share'
 import { answerForPuzzle, WORDLE_GUESS_SET } from '@/games/wordle/data'
 import {
   isValidGuess,
-  scoreGuess,
+  normalizeGuessInput,
   validateHardMode,
   WORD_LENGTH,
-  type LetterState,
 } from '@/games/wordle/logic'
 import { buildWordleShare } from '@/games/wordle/share'
 import {
@@ -31,9 +30,9 @@ export type WordleGame = {
   stats: WordleStats
   currentGuess: string
   message: string
-  keyboardStates: ReadonlyMap<string, LetterState>
   sharePending: boolean
   handleKey: (key: string) => void
+  handleInput: (value: string) => void
   share: () => Promise<void>
   toggleHardMode: () => void
 }
@@ -146,27 +145,14 @@ export function useWordleGame(): WordleGame {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [handleKey])
 
-  const keyboardStates = useMemo(() => {
-    const states = new Map<string, LetterState>()
-    const rank: Record<LetterState, number> = {
-      absent: 0,
-      present: 1,
-      correct: 2,
-    }
-
-    for (const guess of state.guesses) {
-      const result = scoreGuess(guess, answer)
-      guess.split('').forEach((letter, index) => {
-        const next = result[index]
-        const previous = states.get(letter)
-        if (!previous || rank[next] > rank[previous]) {
-          states.set(letter, next)
-        }
-      })
-    }
-
-    return states
-  }, [answer, state.guesses])
+  const handleInput = useCallback(
+    (value: string) => {
+      if (!launchReady || isTerminal(state.status)) return
+      setMessage('')
+      setCurrentGuess(normalizeGuessInput(value))
+    },
+    [launchReady, state.status],
+  )
 
   const share = useCallback(async () => {
     if (isTerminal(state.status) === false) return
@@ -200,9 +186,9 @@ export function useWordleGame(): WordleGame {
     stats,
     currentGuess,
     message,
-    keyboardStates,
     sharePending,
     handleKey,
+    handleInput,
     share,
     toggleHardMode,
   }

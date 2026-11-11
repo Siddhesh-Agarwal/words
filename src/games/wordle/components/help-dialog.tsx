@@ -43,6 +43,11 @@ export function HelpDialog({
           <li>An x means the letter is not in the word.</li>
         </ul>
 
+        <p className="text-sm text-muted-foreground">
+          Tap the board to type on mobile. Press Enter to submit and Backspace
+          to delete.
+        </p>
+
         <Separator />
 
         <div className="flex items-center justify-between gap-4">

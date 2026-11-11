@@ -1,55 +1,129 @@
+import { useEffect, useRef, type ReactNode } from 'react'
 import { Share2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Board } from '@/games/wordle/components/board'
 import { HelpDialog } from '@/games/wordle/components/help-dialog'
-import { Keyboard } from '@/games/wordle/components/keyboard'
 import { StatsDialog } from '@/games/wordle/components/stats-dialog'
+import { WORD_LENGTH } from '@/games/wordle/logic'
 import { isTerminal } from '@/games/wordle/state'
 import { useWordleGame } from '@/games/wordle/use-wordle-game'
 
+const CORNERS = [
+  'top-[-7px] left-[-7px] border-t-2 border-l-2',
+  'top-[-7px] right-[-7px] border-t-2 border-r-2',
+  'bottom-[-7px] left-[-7px] border-b-2 border-l-2',
+  'bottom-[-7px] right-[-7px] border-b-2 border-r-2',
+]
+
+function WordleCard({ children }: { children: ReactNode }) {
+  return (
+    <div className="mx-auto w-full max-w-lg px-4 py-8">
+      <div className="relative">
+        {CORNERS.map((className) => (
+          <span
+            key={className}
+            aria-hidden="true"
+            className={`pointer-events-none absolute size-3 border-foreground ${className}`}
+          />
+        ))}
+        <Card className="border-2 border-foreground bg-card ring-0 shadow-[6px_6px_0_hsl(var(--ink)/0.15)] [--card-spacing:1.5rem]">
+          {children}
+        </Card>
+      </div>
+    </div>
+  )
+}
+
 export function WordlePage() {
   const game = useWordleGame()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isTerminal(game.state.status)) inputRef.current?.blur()
+  }, [game.state.status])
 
   if (!game.launchReady) {
     return (
-      <div className="mx-auto flex w-full max-w-lg flex-col gap-2 px-4 py-10">
-        <h1 className="text-2xl font-semibold tracking-tight">Wordle</h1>
-        <p className="text-muted-foreground">The first puzzle starts soon.</p>
-      </div>
+      <WordleCard>
+        <CardHeader>
+          <CardTitle role="heading" aria-level={1}>
+            Wordle
+          </CardTitle>
+          <CardDescription>The first puzzle starts soon.</CardDescription>
+        </CardHeader>
+      </WordleCard>
     )
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-6">
-      <header className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-0.5">
-          <h1 className="text-2xl font-semibold tracking-tight">Wordle</h1>
-          <p className="text-sm text-muted-foreground">
-            Puzzle #{game.puzzleNo}
-          </p>
-        </div>
-        <div className="flex items-center gap-1">
-          <HelpDialog
-            hardMode={game.state.hardMode}
-            onToggleHardMode={game.toggleHardMode}
+    <WordleCard>
+      <CardHeader>
+        <CardTitle role="heading" aria-level={1}>
+          Wordle
+        </CardTitle>
+        <CardDescription className="font-mono text-[11px] uppercase tracking-[0.2em]">
+          Puzzle #{game.puzzleNo}
+        </CardDescription>
+        <CardAction>
+          <div className="flex items-center gap-1">
+            <HelpDialog
+              hardMode={game.state.hardMode}
+              onToggleHardMode={game.toggleHardMode}
+            />
+            <StatsDialog stats={game.stats} />
+          </div>
+        </CardAction>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-3">
+        <div className="relative rounded-md focus-within:ring-2 focus-within:ring-ring">
+          <input
+            ref={inputRef}
+            type="text"
+            value={game.currentGuess}
+            onChange={(event) => game.handleInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                game.handleKey('Enter')
+              } else if (
+                event.key.length === 1 &&
+                !/[a-zA-Z]/.test(event.key)
+              ) {
+                event.preventDefault()
+              }
+            }}
+            maxLength={WORD_LENGTH}
+            inputMode="text"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="go"
+            aria-label="Type your Wordle guess"
+            className="absolute inset-0 z-10 size-full cursor-text opacity-0"
           />
-          <StatsDialog stats={game.stats} />
+          <Board
+            guesses={game.state.guesses}
+            currentGuess={game.currentGuess}
+            answer={game.answer}
+          />
         </div>
-      </header>
+        <p className="text-center text-xs text-muted-foreground sm:hidden">
+          Tap the board to type.
+        </p>
+      </CardContent>
 
-      <Board
-        guesses={game.state.guesses}
-        currentGuess={game.currentGuess}
-        answer={game.answer}
-      />
-
-      <Keyboard
-        states={game.keyboardStates}
-        onKey={game.handleKey}
-        disabled={isTerminal(game.state.status)}
-      />
-
-      <div className="flex flex-col items-center gap-2">
+      <CardFooter className="flex flex-col items-center gap-2">
         <Button
           type="button"
           onClick={() => void game.share()}
@@ -64,7 +138,7 @@ export function WordlePage() {
         >
           {game.message}
         </p>
-      </div>
-    </div>
+      </CardFooter>
+    </WordleCard>
   )
 }

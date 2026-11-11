@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   isWinning,
   isValidGuess,
+  normalizeGuessInput,
   scoreGuess,
   validateHardMode,
 } from '@/games/wordle/logic'
@@ -32,6 +33,13 @@ describe('Wordle scoring', () => {
       'absent',
       'correct',
     ])
+  })
+
+  it('normalizes typed input to five lowercase letters', () => {
+    expect(normalizeGuessInput('  Cr4ne! ')).toBe('crne')
+    expect(normalizeGuessInput('abcdefg')).toBe('abcde')
+    expect(normalizeGuessInput('é')).toBe('')
+    expect(normalizeGuessInput('A-B')).toBe('ab')
   })
 
   it('validates guesses against the dictionary', () => {
