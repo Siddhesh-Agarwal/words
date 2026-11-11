@@ -1,194 +1,158 @@
-Welcome to your new TanStack Start app!
+# words
 
-# Getting Started
+A small collection of daily word puzzles. One puzzle per game per day, identical for every player, with no backend, accounts, ads, or tracking.
 
-To run this application:
+## Games
 
-```bash
+| Game            | Goal                                                                  |
+| --------------- | --------------------------------------------------------------------- |
+| **Wordle**      | Guess a five-letter word in six tries.                                |
+| **Word Ladder** | Change one letter at a time to turn the start word into the end word. |
+| **Cryptogram**  | Decode a substitution-cipher quote, proverb, or tech quote.           |
+
+Each game is playable end-to-end, with local stats, share text, help, keyboard support, light/dark themes, and a colorblind-safe palette.
+
+## Stack
+
+- React 19 + TypeScript + Vite
+- TanStack Router (file-based routes)
+- Tailwind CSS v4 with shadcn-style components
+- TanStack Store for stats
+- Vitest for unit tests
+- Python 3.12+ data pipeline exposed as a Typer CLI (`uv run words-data`)
+
+There is no runtime server and no database. All game data is generated offline and committed under `src/data/`.
+
+## Getting started
+
+```sh
 pnpm install
 pnpm dev
 ```
 
-# Building For Production
+The dev server runs at <http://localhost:3000>.
 
-To build this application for production:
+The committed data is enough to run the site. Python is only needed to regenerate or validate datasets.
 
-```bash
-pnpm build
+## Commands
+
+| Command                | What it does                                                |
+| ---------------------- | ----------------------------------------------------------- |
+| `pnpm dev`             | Start the Vite dev server.                                  |
+| `pnpm build`           | Build the static site into `dist/`.                         |
+| `pnpm preview`         | Preview the production build.                               |
+| `pnpm test`            | Run the Vitest suite once.                                  |
+| `pnpm test:watch`      | Run Vitest in watch mode.                                   |
+| `pnpm lint`            | Lint and apply safe Biome fixes.                            |
+| `pnpm format`          | Format and apply fixes with Biome.                          |
+| `pnpm check`           | Run Biome lint, format, and import organization with fixes. |
+| `pnpm generate-routes` | Regenerate `src/routeTree.gen.ts`.                          |
+
+Before considering a change done:
+
+```sh
+pnpm run lint && pnpm test && pnpm exec tsc --noEmit && pnpm run build
+uv run words-data check
 ```
 
-## Styling
+## Data pipeline
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+The Python package lives in `scripts/` and is configured by `pyproject.toml`. It is intentionally separate from `package.json`; all Python commands go through `uv`.
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
-
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
-
-```bash
-pnpm lint
-pnpm format
-pnpm check
+```sh
+uv sync
+uv run words-data --help
+uv run words-data check       # drift, data shapes, quote rules, Python tests
+uv run words-data generate    # rewrite committed datasets
 ```
 
+Other useful commands:
 
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```sh
+uv run words-data generate --only wordle
+uv run words-data generate --only ladder
+uv run words-data generate --only crypto
+uv run words-data validate-data
+uv run words-data validate-quotes
+uv run words-data test
 ```
 
-Then anywhere in your JSX you can use it like so:
+Word lists come from **SCOWL 2020.12.07** (MIT-like licence). The pinned tarball is not committed, but the imported source pools, licence, and checksums are. Do not use the NYT Wordle lists.
 
-```tsx
-<Link to="/about">About</Link>
+Generated files:
+
+```text
+src/data/
+  wordle-answers.json
+  wordle-guesses.json
+  ladder-dictionary.json
+  ladder/manifest.json
+  ladder/000.json ... 083.json   # 365 days per lazy-loaded chunk
+  cryptogram-quotes.json
 ```
 
-This will create a link that will navigate to the `/about` route.
+See [`scripts/README.md`](scripts/README.md) for the full generator, validation, source, and licensing details.
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+## Daily puzzle design
 
-### Using A Layout
+- Puzzle numbers use the **player's local date**, so the puzzle changes at local midnight.
+- `puzzleNo = (local date - game EPOCH) + 1`, so puzzle **#1** lands on the game's launch date.
+- Each game has its own epoch in `src/core/date.ts`; changing one does not shift the others.
+- Puzzles are seeded from `{game}:{puzzleNo}` with a fixed hash and `mulberry32`, so every player gets the same puzzle.
+- List-based content is shuffled once at build time and indexed by puzzle number.
+- A dev-only `?puzzle=N` override is available in development builds for testing.
+- Never call `new Date()` outside `src/core/date.ts`; inject dates so tests stay deterministic.
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
+Cryptogram difficulty follows the weekday:
 
-Here is an example layout that includes a header:
+| Day             | Quote length | Pre-revealed letters |
+| :-------------- | :----------: | :------------------: |
+| Monday          |    Short     |          3           |
+| Tuesday         |    Short     |          2           |
+| Wednesday       |    Medium    |          1           |
+| Thursday–Friday |    Medium    |          0           |
+| Saturday–Sunday |     Long     |          0           |
 
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+In-progress state and stats persist in `localStorage` under:
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
+```text
+words:v1:{game}:state
+words:v1:{game}:stats
 ```
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+Every read and write is guarded. Corrupt or missing data is discarded rather than crashing the game.
 
-## Server Functions
+## Project layout
 
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
+```text
+src/
+  core/          date math, seeded randomness, storage, sharing
+  games/
+    wordle/
+    word-ladder/
+    cryptogram/  each game owns its data loader, logic, state, and UI
+  components/    shared card shell and UI primitives
+  routes/        file-based TanStack Router routes
+  data/          committed generated JSON
+scripts/         Python generators, validators, and tests
 ```
 
-## API Routes
+Game rules and scoring live in pure functions, separate from React components, so they can be unit-tested directly.
 
-You can create API routes by using the `server` property in your route definitions:
+## Sharing
 
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
+Each game produces spoiler-free text:
 
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
+```text
+Wordle #12 4/6
+Ladder #12 · 6 steps (par 5)
+Cryptogram #12 · solved · 1 hint
 ```
 
-## Data Fetching
+The Web Share API is used when available, otherwise the result is copied to the clipboard with a toast.
 
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+## Deployment
 
-For example:
+`pnpm build` produces a fully static SPA in `dist/`. Host it on any static host with an SPA fallback to `index.html`.
 
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Word Ladder chunks are emitted as separate assets and loaded on demand, so the initial page does not download the whole ladder schedule. Do not eagerly import `src/data/ladder/` or Vite will bundle every chunk.
