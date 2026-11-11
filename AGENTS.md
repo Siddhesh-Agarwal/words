@@ -21,44 +21,14 @@ Non-goals: no backend, accounts, leaderboards, ads, or analytics that require co
 - **Frontend: React + Vite (TypeScript).**
 - Build-time data generation is done with **Python scripts** in `scripts/`; their output is committed JSON in `src/data/`.
 
-## Repository layout
-
-```
-.
-├── AGENTS.md
-├── scripts/                 # Python build-time generators and validators
-│   ├── gen_ladder_pairs.py  # BFS over word graph -> src/data/ladder-daily.json
-│   ├── validate_quotes.py   # lints src/data/cryptogram-quotes.json
-│   └── build_wordlists.py   # builds Wordle answer/guess lists from a licensed source
-├── src/
-│   ├── core/                # shared by all games (build this first)
-│   │   ├── date.ts          # puzzle number from local date
-│   │   ├── seed.ts          # string hash + mulberry32 PRNG
-│   │   ├── storage.ts       # versioned, try/catch-wrapped localStorage
-│   │   ├── stats.ts         # streaks, win distribution
-│   │   ├── share.ts         # share-text builders + navigator.share/clipboard
-│   │   └── useDailyGame.ts  # hook: loads/saves per-game daily state
-│   ├── components/          # Shell, StatsModal, HowToPlay, Keyboard, Toast
-│   ├── games/
-│   │   ├── wordle/
-│   │   ├── ladder/
-│   │   └── cryptogram/
-│   ├── data/                # generated JSON (committed)
-│   ├── routes.tsx           # /, /wordle, /ladder, /cryptogram
-│   └── main.tsx
-└── tests/                   # Vitest unit tests
-```
-
 ## Commands
 
-```
-npm install
-npm run dev          # Vite dev server
-npm run build        # tsc + vite build
-npm run test         # Vitest
-npm run lint
-python scripts/gen_ladder_pairs.py
-python scripts/validate_quotes.py
+```sh
+pnpm install
+pnpm run dev          # Vite dev server
+pnpm run build        # tsc + vite build
+pnpm run test         # Vitest
+pnpm run lint
 ```
 
 Always run `npm run lint && npm run test && npm run build` before considering a task done. Run the Python validators whenever `src/data/` changes.
