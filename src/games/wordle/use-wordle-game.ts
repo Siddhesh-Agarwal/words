@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useStore } from '@tanstack/react-store'
 import { toast } from 'sonner'
 import { resolvePuzzleNumber } from '@/core/date'
 import { shareText } from '@/core/share'
@@ -14,13 +15,14 @@ import {
   addGuess,
   isTerminal,
   loadState,
-  loadStats,
-  recordResult,
   saveState,
-  saveStats,
   type WordleState,
   type WordleStats,
 } from '@/games/wordle/state'
+import {
+  recordWordleResult,
+  wordleStatsStore,
+} from '@/games/wordle/stats-store'
 
 export type WordleGame = {
   puzzleNo: number
@@ -49,7 +51,7 @@ export function useWordleGame(): WordleGame {
     [launchReady, puzzleNo],
   )
   const [state, setState] = useState<WordleState>(() => loadState(puzzleNo))
-  const [stats, setStats] = useState<WordleStats>(() => loadStats())
+  const stats = useStore(wordleStatsStore)
   const [currentGuess, setCurrentGuess] = useState('')
   const [message, setMessage] = useState('')
   const [sharePending, setSharePending] = useState(false)
@@ -84,14 +86,11 @@ export function useWordleGame(): WordleGame {
         setCurrentGuess('')
 
         if (isTerminal(next.status)) {
-          const nextStats = recordResult(
-            stats,
+          recordWordleResult(
             puzzleNo,
             next.status === 'won',
             next.guesses.length,
           )
-          setStats(nextStats)
-          saveStats(nextStats)
           setMessage(
             next.status === 'won'
               ? 'You solved it.'
@@ -118,7 +117,7 @@ export function useWordleGame(): WordleGame {
         )
       }
     },
-    [answer, currentGuess, launchReady, puzzleNo, state, stats],
+    [answer, currentGuess, launchReady, puzzleNo, state],
   )
 
   useEffect(() => {
