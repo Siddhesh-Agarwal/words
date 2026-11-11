@@ -13,6 +13,7 @@
   --brick-soft: 8 52% 94%;
   --brass: 38 42% 42%;
   --brass-soft: 38 45% 92%;
+  --correct: 145 40% 30%;
   --background: var(--paper);
   --foreground: var(--ink);
   --card: 60 20% 97%;
@@ -51,6 +52,7 @@
   --muted-foreground: 60 8% 70%;
   --accent: 38 42% 25%;
   --accent-foreground: 60 12% 91%;
+  --correct: 145 35% 50%;
   --destructive: 8 52% 55%;
   --destructive-foreground: 60 20% 97%;
   --border: 150 10% 30%;
@@ -73,6 +75,7 @@
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-correct: hsl(var(--correct));
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-border: hsl(var(--border));

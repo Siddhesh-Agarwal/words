@@ -29,6 +29,7 @@ export function HelpDialog() {
           <li>Change exactly one letter on each step.</li>
           <li>Every step must be a dictionary word.</li>
           <li>Words cannot repeat.</li>
+          <li>Green means the letter is already in the right position for the end word.</li>
           <li>Reach the end word. Try to match or beat par.</li>
           <li>Use Undo to take back the last step.</li>
         </ul>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  correctPositions,
   isOneLetterApart,
   isSolved,
   normalizeLadderInput,
@@ -13,6 +14,13 @@ describe('Word Ladder logic', () => {
   it('normalizes input to the ladder word length', () => {
     expect(normalizeLadderInput('  Co4rd! ', 4)).toBe('cord')
     expect(normalizeLadderInput('abcdefg', 4)).toBe('abcd')
+  })
+
+  it('marks letters already in the target position', () => {
+    expect(correctPositions('deed', 'mugs')).toEqual([false, false, false, false])
+    expect(correctPositions('muse', 'mugs')).toEqual([true, true, false, false])
+    expect(correctPositions('mugs', 'mugs')).toEqual([true, true, true, true])
+    expect(correctPositions('mu', 'mugs')).toEqual([true, true, false, false])
   })
 
   it('detects exactly one changed letter', () => {

@@ -12,6 +12,13 @@ export function normalizeLadderInput(value: string, wordLength: number): string 
     .slice(0, wordLength)
 }
 
+export function correctPositions(word: string, target: string): boolean[] {
+  return Array.from(
+    { length: target.length },
+    (_, index) => word[index] === target[index],
+  )
+}
+
 export function isOneLetterApart(left: string, right: string): boolean {
   if (left.length !== right.length) return false
 

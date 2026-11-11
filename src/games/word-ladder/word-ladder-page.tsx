@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { ArrowRightIcon, Share2Icon, Undo2Icon } from 'lucide-react'
+import { Share2Icon, Undo2Icon } from 'lucide-react'
 import { GameCard } from '@/components/game-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,22 +12,11 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import { HelpDialog } from '@/games/word-ladder/components/help-dialog'
 import { StatsDialog } from '@/games/word-ladder/components/stats-dialog'
+import { WordRow } from '@/games/word-ladder/components/word-row'
 import { useLadderGame } from '@/games/word-ladder/use-ladder-game'
-
-function WordBox({ label, word }: { label: string; word: string }) {
-  return (
-    <div className="flex min-w-0 flex-col gap-1">
-      <span className="text-xs uppercase tracking-wider text-muted-foreground">
-        {label}
-      </span>
-      <span className="truncate rounded-md border bg-background px-3 py-2 text-center font-mono text-lg uppercase">
-        {word}
-      </span>
-    </div>
-  )
-}
 
 export function WordLadderPage() {
   const game = useLadderGame()
@@ -93,7 +82,6 @@ export function WordLadderPage() {
 
   const pair = game.pair
   const state = game.state
-  const steps = state.path.slice(1)
   const wordLength = pair.start.length
 
   return (
@@ -114,49 +102,46 @@ export function WordLadderPage() {
       </CardHeader>
 
       <CardContent className="flex flex-col gap-5">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-          <WordBox label="Start" word={pair.start} />
-          <ArrowRightIcon
-            aria-hidden="true"
-            className="size-4 text-muted-foreground"
-          />
-          <WordBox label="End" word={pair.end} />
-        </div>
-
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-between gap-2">
           <Badge variant="secondary">Par {pair.par}</Badge>
-          {game.solved ? <Badge>Solved</Badge> : null}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium">Steps</h2>
+          <div className="flex items-center gap-2">
+            {game.solved ? <Badge>Solved</Badge> : null}
             <span className="text-xs text-muted-foreground">
-              {game.steps} taken
+              {game.steps} steps
             </span>
           </div>
+        </div>
 
-          {steps.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">
-              No steps yet.
-            </p>
-          ) : (
-            <ol className="flex flex-col gap-1.5" aria-label="Ladder steps">
-              {steps.map((word, index) => (
-                <li
-                  key={word}
-                  className="grid grid-cols-[2rem_1fr] items-center gap-2"
-                >
-                  <span className="text-right text-xs text-muted-foreground">
-                    {index + 1}
-                  </span>
-                  <span className="rounded-md border bg-background px-3 py-2 font-mono text-base uppercase">
-                    {word}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          )}
+        <div className="flex flex-col gap-3">
+          <WordRow
+            kind="target"
+            label="End"
+            word={pair.end}
+            target={pair.end}
+          />
+          <Separator />
+          <ol className="flex flex-col gap-1.5" aria-label="Ladder path">
+            {state.path.map((word, index) => (
+              <li key={word}>
+                <WordRow
+                  kind="path"
+                  label={index === 0 ? 'Start' : String(index)}
+                  word={word}
+                  target={pair.end}
+                />
+              </li>
+            ))}
+            {game.solved ? null : (
+              <li>
+                <WordRow
+                  kind="current"
+                  label="Next"
+                  word={game.currentWord}
+                  target={pair.end}
+                />
+              </li>
+            )}
+          </ol>
         </div>
 
         <div className="flex flex-col gap-2">
