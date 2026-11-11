@@ -1,9 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { WordlePage } from '@/games/wordle/wordle-page'
 
 export const Route = createFileRoute('/game/wordle')({
-  component: RouteComponent,
+  component: WordlePage,
 })
-
-function RouteComponent() {
-  return <div>Hello "/game/wordle"!</div>
-}

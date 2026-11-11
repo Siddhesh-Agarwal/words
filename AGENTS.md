@@ -26,6 +26,7 @@ Non-goals: no backend, accounts, leaderboards, ads, or analytics that require co
 ```sh
 pnpm install
 pnpm run dev          # Vite dev server
+pnpm run test         # Vitest
 pnpm run build        # vite build
 pnpm run lint
 
@@ -34,7 +35,7 @@ uv run words-data --help
 uv run words-data check
 ```
 
-Always run `pnpm run lint && pnpm run build` and `uv run words-data check` before considering a task done. `pnpm run test` is not configured yet; the Python suite is `uv run words-data test`.
+Always run `pnpm run lint && pnpm run test && pnpm run build` and `uv run words-data check` before considering a task done.
 
 ## Shared conventions (apply to every game)
 
