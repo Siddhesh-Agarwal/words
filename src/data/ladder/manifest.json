@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "dictionary": "../ladder-dictionary.json",
+  "chunkSize": 3650,
+  "chunkCount": 84,
+  "totalPairs": 303316,
+  "parRange": [
+    4,
+    7
+  ],
+  "length": 4,
+  "endpointMaxSize": 20,
+  "dictionaryMaxSize": 50,
+  "seed": "words:v1:ladder:pairs"
+}
