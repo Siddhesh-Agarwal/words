@@ -342,7 +342,7 @@ Assert:
 - a quote with a digit, curly punctuation left unnormalized, or `<15` distinct letters fails;
 - a duplicate normalized text fails;
 - `prepare_quotes` strips `source`, preserves IDs, and shuffles deterministically;
-- `tier_counts` buckets `<60`, `60-90`, `>90`.
+- `tier_counts` buckets `<60`, `60-87`, `>=88`.
 
 - [ ] **Step 2: Run to verify failure**
 

@@ -37,6 +37,7 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 
 - `src/data/cryptogram-quotes.json` - `{id, text, attribution, category}` objects, shuffled with seed `words:v1:cryptogram:quotes`.
 - Target 60 quotes: 20 `quote`, 20 `proverb`, 20 `tech`.
+- Length tiers for weekday difficulty: short `< 60`, medium `60-87`, long `>= 88`.
 - Authored source: `scripts/data/quotes-source.json` with an additional `source` provenance field.
 - Generator normalizes curly quotes, em dashes, ellipses, and whitespace; strips `source`; validates.
 - `scripts/validate_quotes.py` enforces 40-120 chars, >= 15 distinct letters, ASCII letters plus basic punctuation, no digits, unique IDs/text, valid categories, and non-null attribution for `quote`/`tech`.
