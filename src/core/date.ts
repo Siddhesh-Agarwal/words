@@ -24,9 +24,7 @@ export function puzzleNumberFor(game: GameId, date: Date): number {
       date.getUTCFullYear(),
       date.getUTCMonth(),
       date.getUTCDate(),
-    ) -
-    epochDay(game) +
-    1
+    ) - epochDay(game)
   )
 }
 
