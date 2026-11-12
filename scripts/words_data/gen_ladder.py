@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from scripts.lib.jsonio import dumps
-from scripts.lib.ladder import (
+from words_data.lib.jsonio import dumps
+from words_data.lib.ladder import (
     build_graph,
     candidate_pairs,
     chunked,
     largest_component,
 )
-from scripts.lib.seed import shuffled
-from scripts.lib.words import load_pool, words_at_most
+from words_data.lib.seed import shuffled
+from words_data.lib.words import load_pool, words_at_most
 
 DICTIONARY_MAX_SIZE = 50
 ENDPOINT_MAX_SIZE = 20

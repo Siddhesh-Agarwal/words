@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 
-from scripts.gen_wordle import build
+from words_data.gen_wordle import build
 
 
 class WordleTests(unittest.TestCase):

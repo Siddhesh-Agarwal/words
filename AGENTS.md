@@ -19,7 +19,7 @@ Non-goals: no backend, accounts, leaderboards, ads, or analytics that require co
 - **Static site, no backend.** Everything runs in the browser.
 - **Daily puzzle is client-side, seeded by the date.** Same date -> same puzzle for every player.
 - **Frontend: React + Vite (TypeScript).**
-- Build-time data generation is a **Python package** in `scripts/`, exposed as `uv run words-data`; its output is committed JSON in `src/data/`.
+- Build-time data generation is a **Python package** in `scripts/` (project files and the `words_data` package all live there, never at the repo root), exposed as `uv run --project scripts words-data`; its output is committed JSON in `src/data/`.
 
 ## Commands
 
@@ -30,12 +30,12 @@ pnpm run test         # Vitest
 pnpm run build        # vite build
 pnpm run lint
 
-uv sync
-uv run words-data --help
-uv run words-data check
+uv sync --project scripts
+uv run --project scripts words-data --help
+uv run --project scripts words-data check
 ```
 
-Always run `pnpm run lint && pnpm run test && pnpm run build` and `uv run words-data check` before considering a task done.
+Always run `pnpm run lint && pnpm run test && pnpm run build` and `uv run --project scripts words-data check` before considering a task done.
 
 ## Shared conventions (apply to every game)
 

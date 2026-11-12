@@ -4,13 +4,13 @@ from pathlib import Path
 
 import typer
 
-from scripts.generate import check_files, collect, write_files
-from scripts.import_scowl import build_source_files
-from scripts.lib.jsonio import check_text, write_text
-from scripts.validate_data import summary, validate
-from scripts.validate_quotes import validate_files
+from words_data.generate import check_files, collect, write_files
+from words_data.import_scowl import build_source_files
+from words_data.lib.jsonio import check_text, write_text
+from words_data.validate_data import summary, validate
+from words_data.validate_quotes import validate_files
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_DIR = ROOT / "src" / "data"
 DEFAULT_SOURCE_DIR = ROOT / "scripts" / "data" / "source" / "scowl"
 DEFAULT_QUOTES_SOURCE = ROOT / "scripts" / "data" / "quotes-source.json"

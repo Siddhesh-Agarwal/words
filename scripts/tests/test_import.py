@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 
-from scripts.import_scowl import build_source_files
+from words_data.import_scowl import build_source_files
 
 
 def make_tarball(path: Path, files: dict[str, bytes]) -> None:

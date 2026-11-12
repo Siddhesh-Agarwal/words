@@ -2,16 +2,16 @@
 
 All game data is generated offline and committed under `src/data/`. There are no API or backend calls; the current ladder chunk is loaded as a static asset on demand.
 
-The Python tooling is a `uv` project exposed as one Typer CLI. The code is the `scripts` package, but `pyproject.toml` and `uv.lock` live at the repository root, so run every command below from the repo root. `package.json` contains no Python commands.
+The Python tooling is a `uv` project confined to this directory: `pyproject.toml`, `uv.lock`, and the `words_data` package all live here, and no Python project files exist at the repo root (Cloudflare would otherwise try to install Python during deployment). Run the commands below from the repo root with `--project scripts`, or `cd scripts` and drop that flag. `package.json` contains no Python commands.
 
 ## Setup
 
 ```sh
-uv sync
-uv run words-data --help
+uv sync --project scripts
+uv run --project scripts words-data --help
 ```
 
-`uv` creates `.venv` at the repo root from `pyproject.toml` and `uv.lock`. Add dependencies with `uv add`.
+`uv` creates `.venv` inside `scripts/` from `pyproject.toml` and `uv.lock`; it is gitignored. Add dependencies from `scripts/` with `uv add`.
 
 ## Source
 
@@ -24,8 +24,8 @@ SCOWL (SCOWLv1) 2020.12.07, MIT-like licence.
 Import or refresh the source pools:
 
 ```sh
-uv run words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz
-uv run words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz --check
+uv run --project scripts words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz
+uv run --project scripts words-data import-scowl --tarball /path/to/scowl-2020.12.07.tar.gz --check
 ```
 
 The importer reads `final/english-words.{10,20,35,40,50,55,60,70,80}`, keeps lowercase `a-z` words of length 3-5, records each word's minimum SCOWL size, and removes SCOWL's `misc/offensive.*` and `misc/profane.*` words. It writes:
@@ -43,13 +43,13 @@ scripts/data/source/scowl/
 ## Regenerate and validate
 
 ```sh
-uv run words-data generate                 # write all data
-uv run words-data generate --check         # fail if committed data has drifted
-uv run words-data validate-data            # shapes, counts, BFS par, quote rules
-uv run words-data validate-quotes          # quote source and output
-uv run words-data test                     # unit tests
-uv run words-data check                    # drift + data + quotes + tests
-uv run words-data check --tarball /path/to/scowl-2020.12.07.tar.gz
+uv run --project scripts words-data generate                 # write all data
+uv run --project scripts words-data generate --check         # fail if committed data has drifted
+uv run --project scripts words-data validate-data            # shapes, counts, BFS par, quote rules
+uv run --project scripts words-data validate-quotes          # quote source and output
+uv run --project scripts words-data test                     # unit tests
+uv run --project scripts words-data check                    # drift + data + quotes + tests
+uv run --project scripts words-data check --tarball /path/to/scowl-2020.12.07.tar.gz
 ```
 
 `generate --only wordle|ladder|crypto` regenerates one dataset. `--check` compares bytes and reports stale ladder chunks.
@@ -57,9 +57,9 @@ uv run words-data check --tarball /path/to/scowl-2020.12.07.tar.gz
 To write compact JSON, add `--minify`:
 
 ```sh
-uv run words-data generate --minify
-uv run words-data generate --check --minify
-uv run words-data check --minify
+uv run --project scripts words-data generate --minify
+uv run --project scripts words-data generate --check --minify
+uv run --project scripts words-data check --minify
 ```
 
 Minification changes formatting only, never puzzle content or ordering. Ladder chunks are already compact. If you commit minified data, pass `--minify` to future checks.
@@ -123,8 +123,8 @@ The authored source is `scripts/data/quotes-source.json`:
 To add a quote, append an entry with the next unused `qNNNN` ID, then run:
 
 ```sh
-uv run words-data generate --only crypto
-uv run words-data validate-quotes
+uv run --project scripts words-data generate --only crypto
+uv run --project scripts words-data validate-quotes
 ```
 
 Do not renumber existing IDs; they are stable puzzle identifiers.

@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from scripts.lib.jsonio import load_json
-from scripts.lib.quotes import tier_counts, validate_entries, validate_output
+from words_data.lib.jsonio import load_json
+from words_data.lib.quotes import tier_counts, validate_entries, validate_output
 
 MIN_QUOTES = 45
 MIN_PER_TIER = 10

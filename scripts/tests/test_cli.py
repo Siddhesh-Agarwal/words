@@ -4,7 +4,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from scripts.cli import app
+from words_data.cli import app
 
 runner = CliRunner()
 

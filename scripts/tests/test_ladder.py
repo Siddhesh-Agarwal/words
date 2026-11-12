@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 
 
-from scripts.gen_ladder import build
-from scripts.lib.ladder import (
+from words_data.gen_ladder import build
+from words_data.lib.ladder import (
     build_graph,
     candidate_pairs,
     chunked,

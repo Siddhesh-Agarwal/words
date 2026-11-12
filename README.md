@@ -19,7 +19,7 @@ Each game is playable end-to-end, with local stats, share text, help, keyboard s
 - Tailwind CSS v4 with shadcn-style components
 - TanStack Store for stats
 - Vitest for unit tests
-- Python 3.12+ data pipeline exposed as a Typer CLI (`uv run words-data`)
+- Python 3.12+ data pipeline exposed as a Typer CLI (`uv run --project scripts words-data`)
 
 There is no runtime server and no database. All game data is generated offline and committed under `src/data/`.
 
@@ -52,29 +52,29 @@ Before considering a change done:
 
 ```sh
 pnpm run lint && pnpm test && pnpm exec tsc --noEmit && pnpm run build
-uv run words-data check
+uv run --project scripts words-data check
 ```
 
 ## Data pipeline
 
-The Python code is the `scripts` package; its `pyproject.toml` and `uv.lock` live at the repository root, so all Python commands run from there. It is intentionally separate from `package.json`; all Python commands go through `uv`.
+The Python project lives entirely in `scripts/`: `pyproject.toml`, `uv.lock`, and the `words_data` package. Nothing Python-related sits at the repository root, so Cloudflare never tries to install Python during deployment. Run the commands below from the repo root (or `cd scripts` and drop `--project scripts`); it is intentionally separate from `package.json`.
 
 ```sh
-uv sync
-uv run words-data --help
-uv run words-data check       # drift, data shapes, quote rules, Python tests
-uv run words-data generate    # rewrite committed datasets
+uv sync --project scripts
+uv run --project scripts words-data --help
+uv run --project scripts words-data check       # drift, data shapes, quote rules, Python tests
+uv run --project scripts words-data generate    # rewrite committed datasets
 ```
 
 Other useful commands:
 
 ```sh
-uv run words-data generate --only wordle
-uv run words-data generate --only ladder
-uv run words-data generate --only crypto
-uv run words-data validate-data
-uv run words-data validate-quotes
-uv run words-data test
+uv run --project scripts words-data generate --only wordle
+uv run --project scripts words-data generate --only ladder
+uv run --project scripts words-data generate --only crypto
+uv run --project scripts words-data validate-data
+uv run --project scripts words-data validate-quotes
+uv run --project scripts words-data test
 ```
 
 Word lists come from **SCOWL 2020.12.07** (MIT-like licence). The pinned tarball is not committed, but the imported source pools, licence, and checksums are. Do not use the NYT Wordle lists.

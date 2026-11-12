@@ -4,15 +4,15 @@ import unittest
 from pathlib import Path
 
 
-from scripts.gen_cryptogram import build
-from scripts.lib.quotes import (
+from words_data.gen_cryptogram import build
+from words_data.lib.quotes import (
     normalize_text,
     prepare_quotes,
     tier_counts,
     validate_entries,
     validate_output,
 )
-from scripts.validate_quotes import validate_files
+from words_data.validate_quotes import validate_files
 
 VALID_QUOTE = {
     "id": "q0001",

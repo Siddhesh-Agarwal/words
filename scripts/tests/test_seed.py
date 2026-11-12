@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 
-from scripts.lib.seed import Mulberry32, seed_from_label, shuffled
+from words_data.lib.seed import Mulberry32, seed_from_label, shuffled
 
 
 class SeedTests(unittest.TestCase):

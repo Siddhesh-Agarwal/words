@@ -9,9 +9,9 @@ from pathlib import Path
 class ConsoleScriptTest(unittest.TestCase):
     """The installed `words-data` entry point must work from any directory.
 
-    Regression: with pyproject.toml inside scripts/, hatchling packaged no code,
-    so the console script died with `ModuleNotFoundError: No module named
-    'scripts'` and `uv run words-data` could not be spawned at all.
+    Regression: with pyproject.toml inside scripts/, hatchling packaged no code
+    when the project root was itself the package, so the console script died
+    with `ModuleNotFoundError` and could not be spawned at all.
     """
 
     def _run(self, argv: list[str], cwd: str) -> subprocess.CompletedProcess[str]:
@@ -26,8 +26,8 @@ class ConsoleScriptTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("words-data", result.stdout)
 
-    def test_scripts_package_imports_without_project_path(self) -> None:
+    def test_words_data_package_imports_without_project_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            result = self._run([sys.executable, "-c", "import scripts.cli"], cwd=tmp)
+            result = self._run([sys.executable, "-c", "import words_data.cli"], cwd=tmp)
 
         self.assertEqual(result.returncode, 0, result.stderr)

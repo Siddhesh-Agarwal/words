@@ -2,10 +2,10 @@ import re
 from pathlib import Path
 from typing import Any
 
-from scripts.lib.jsonio import load_json
-from scripts.lib.ladder import build_graph, largest_component, shortest_distances
-from scripts.lib.quotes import tier_counts, validate_output
-from scripts.lib.words import load_pool, load_taboo, words_at_most
+from words_data.lib.jsonio import load_json
+from words_data.lib.ladder import build_graph, largest_component, shortest_distances
+from words_data.lib.quotes import tier_counts, validate_output
+from words_data.lib.words import load_pool, load_taboo, words_at_most
 
 WORD_RE = re.compile(r"^[a-z]{5}$")
 LADDER_RE = re.compile(r"^[a-z]{4}$")

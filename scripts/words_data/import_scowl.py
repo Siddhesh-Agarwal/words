@@ -3,8 +3,8 @@ import re
 import tarfile
 from pathlib import Path
 
-from scripts.lib.jsonio import write_text
-from scripts.lib.words import SCOWL_SIZES, WORD_LENGTHS
+from words_data.lib.jsonio import write_text
+from words_data.lib.words import SCOWL_SIZES, WORD_LENGTHS
 
 SCOWL_VERSION = "2020.12.07"
 SCOWL_URL = (
@@ -94,7 +94,7 @@ def build_source_files(tarball: Path, *, verify_checksum: bool = True) -> dict[s
         f"- URL: {SCOWL_URL}\n"
         f"- SHA-256: {SCOWL_SHA256}\n"
         "- Licence: see `Copyright` in this directory.\n"
-        "- Import: `uv run words-data import-scowl --tarball <scowl-2020.12.07.tar.gz>`\n"
+        "- Import: `uv run --project scripts words-data import-scowl --tarball <scowl-2020.12.07.tar.gz>`\n"
         "- Format: `word<TAB>minimum SCOWL size`, lowercase ASCII `a-z`, "
         "no apostrophes or accents.\n"
         f"- Sizes read: {', '.join(str(size) for size in SCOWL_SIZES)}. "

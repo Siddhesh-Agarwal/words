@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
-from scripts.validate_data import validate
+from words_data.validate_data import validate
 
 DATA = ROOT / "src" / "data"
 SOURCE = ROOT / "scripts" / "data" / "source" / "scowl"

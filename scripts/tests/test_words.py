@@ -2,8 +2,8 @@ import unittest
 from pathlib import Path
 
 
-from scripts.lib.jsonio import dumps
-from scripts.lib.words import load_pool, words_at_most
+from words_data.lib.jsonio import dumps
+from words_data.lib.words import load_pool, words_at_most
 
 
 class WordPoolTests(unittest.TestCase):

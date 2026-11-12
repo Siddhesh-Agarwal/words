@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from scripts.lib.jsonio import dumps
-from scripts.lib.seed import shuffled
-from scripts.lib.words import load_pool, words_at_most
+from words_data.lib.jsonio import dumps
+from words_data.lib.seed import shuffled
+from words_data.lib.words import load_pool, words_at_most
 
 ANSWER_MAX_SIZE = 35
 GUESS_MAX_SIZE = 80

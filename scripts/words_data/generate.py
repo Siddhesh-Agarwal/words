@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from scripts.gen_cryptogram import build as build_cryptogram
-from scripts.gen_ladder import build as build_ladder
-from scripts.gen_wordle import build as build_wordle
-from scripts.lib.jsonio import check_text, write_text
+from words_data.gen_cryptogram import build as build_cryptogram
+from words_data.gen_ladder import build as build_ladder
+from words_data.gen_wordle import build as build_wordle
+from words_data.lib.jsonio import check_text, write_text
 
 VALID_ONLY = {"all", "wordle", "ladder", "crypto"}
 

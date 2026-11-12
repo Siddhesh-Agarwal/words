@@ -1,6 +1,6 @@
 # Data Generators Implementation Plan
 
-> **Execution note:** The `python3` commands below are historical. The current entry point is the `uv`/Typer CLI: `uv run words-data --help` and `uv run words-data check`. See `scripts/README.md`.
+> **Execution note:** The `python3` commands below are historical. The current entry point is the `uv`/Typer CLI: `uv run --project scripts words-data --help` and `uv run --project scripts words-data check`. See `scripts/README.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
