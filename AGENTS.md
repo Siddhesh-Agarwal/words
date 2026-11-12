@@ -40,7 +40,7 @@ Always run `pnpm run lint && pnpm run test && pnpm run build` and `uv run words-
 ## Shared conventions (apply to every game)
 
 ### Puzzle numbering and date
-- `puzzleNo = floor((utcMidnight(today) - EPOCH) / 86_400_000) + 1`. `EPOCH` is a single constant in `core/date.ts` (set to the launch date).
+- `puzzleNo = floor((utcMidnight(today) - EPOCH) / 86_400_000)`. `EPOCH` is a single constant in `core/date.ts` (set to the launch date).
 - Use the **UTC date**, so the puzzle changes at 00:00 UTC for every player.
 - Provide a dev-only override (`?puzzle=N`) for testing. Strip or disable it in production builds.
 - Never call `new Date()` outside `core/date.ts`; inject the date so tests are deterministic.

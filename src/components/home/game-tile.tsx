@@ -167,7 +167,7 @@ export function GameTile({
   featured = false,
   className,
 }: GameTileProps) {
-  const ready = puzzleNo > 0
+  const ready = puzzleNo >= 0
   const shortTitle =
     variant === 'word-ladder'
       ? 'Ladder'

@@ -2,7 +2,7 @@
 
 All game data is generated offline and committed under `src/data/`. There are no API or backend calls; the current ladder chunk is loaded as a static asset on demand.
 
-The Python tooling is a `uv` project exposed as one Typer CLI. `package.json` contains no Python commands.
+The Python tooling is a `uv` project exposed as one Typer CLI. The code is the `scripts` package, but `pyproject.toml` and `uv.lock` live at the repository root, so run every command below from the repo root. `package.json` contains no Python commands.
 
 ## Setup
 
@@ -11,7 +11,7 @@ uv sync
 uv run words-data --help
 ```
 
-`uv` creates `.venv` from `pyproject.toml` and `uv.lock`. Add dependencies with `uv add`.
+`uv` creates `.venv` at the repo root from `pyproject.toml` and `uv.lock`. Add dependencies with `uv add`.
 
 ## Source
 

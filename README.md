@@ -57,7 +57,7 @@ uv run words-data check
 
 ## Data pipeline
 
-The Python package lives in `scripts/` and is configured by `pyproject.toml`. It is intentionally separate from `package.json`; all Python commands go through `uv`.
+The Python code is the `scripts` package; its `pyproject.toml` and `uv.lock` live at the repository root, so all Python commands run from there. It is intentionally separate from `package.json`; all Python commands go through `uv`.
 
 ```sh
 uv sync
@@ -96,7 +96,7 @@ See [`scripts/README.md`](scripts/README.md) for the full generator, validation,
 ## Daily puzzle design
 
 - Puzzle numbers use the **UTC date**, so the puzzle changes at **00:00 UTC** for every player.
-- `puzzleNo = (UTC date - game EPOCH) + 1`, so puzzle **#1** lands on the game's launch date.
+- `puzzleNo = (UTC date - game EPOCH)`, so puzzle **#0** lands on the game's launch date.
 - Each game has its own epoch in `src/core/date.ts`; changing one does not shift the others.
 - Puzzles are seeded from `{game}:{puzzleNo}` with a fixed hash and `mulberry32`, so every player gets the same puzzle.
 - List-based content is shuffled once at build time and indexed by puzzle number.

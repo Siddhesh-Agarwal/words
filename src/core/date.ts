@@ -34,8 +34,8 @@ export function todayPuzzleNumber(game: GameId): number {
 
 export function puzzleWeekday(game: GameId, puzzleNo: number): number {
   const [year, month, day] = EPOCHS[game].split('-').map(Number)
-  // Puzzle #1 lands on the epoch, so the offset is zero-based.
-  const date = new Date(Date.UTC(year, month - 1, day + puzzleNo - 1))
+  // Puzzle #0 lands on the epoch day, so the offset is zero-based.
+  const date = new Date(Date.UTC(year, month - 1, day + puzzleNo))
   return (date.getUTCDay() + 6) % 7
 }
 
