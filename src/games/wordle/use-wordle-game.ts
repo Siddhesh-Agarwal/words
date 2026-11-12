@@ -69,6 +69,7 @@ export function useWordleGame(): WordleGame {
         if (!isValidGuess(currentGuess, WORDLE_GUESS_SET)) {
           setMessage('Not in word list')
           toast.error('Not in word list')
+          setCurrentGuess('')
           return
         }
         if (
