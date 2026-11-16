@@ -2,9 +2,9 @@ export type GameId = 'wordle' | 'word-ladder' | 'cryptogram'
 
 // Each game has its own launch epoch; update one without shifting the others.
 export const EPOCHS = {
-  wordle: '2026-11-11',
-  'word-ladder': '2026-11-11',
-  cryptogram: '2026-11-11',
+  wordle: '2026-11-15',
+  'word-ladder': '2026-11-15',
+  cryptogram: '2026-11-15',
 } as const satisfies Record<GameId, string>
 
 const MS_PER_DAY = 86_400_000

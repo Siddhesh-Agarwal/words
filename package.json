@@ -2,8 +2,13 @@
   "name": "words",
   "private": true,
   "type": "module",
+  "author": {
+    "name": "Siddhesh Agarwal",
+    "email": "contact@siddhesh.cc",
+    "url": "https://siddhesh.cc/"
+  },
   "imports": {
-    "#/*": "./src/*"
+    "@/*": "./src/*"
   },
   "scripts": {
     "dev": "vite dev --port 3000",
@@ -45,11 +50,5 @@
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
     "vitest": "^5.1.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lightningcss"
-    ]
   }
 }
