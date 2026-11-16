@@ -60,7 +60,7 @@ function Home() {
           {FACTS.map((fact) => (
             <li
               key={fact.id}
-              className="py-4 text-sm text-muted-foreground sm:px-5 sm:first:pl-0 sm:last:pr-0"
+              className="py-4 text-sm text-muted-foreground bg-muted sm:px-5 font-semibold text-center"
             >
               {fact.text}
             </li>
