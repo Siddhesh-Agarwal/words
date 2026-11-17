@@ -2,6 +2,8 @@
 
 A small collection of daily word puzzles. One puzzle per game per day, identical for every player, with no backend, accounts, ads, or tracking.
 
+[![words — daily word puzzles](https://peerlist.io/api/v1/projects/embed/PRJHKKDEG8RRALRNE1D9E9O9DLN87R?showUpvote=true&theme=dark)](https://peerlist.io/siddheshagarwal/project/words--daily-word-puzzles)
+
 ## Games
 
 | Game            | Goal                                                                  |
