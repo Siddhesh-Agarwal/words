@@ -48,10 +48,10 @@ The head in `index.html` defines the title, description, canonical URL, robots d
 - Favicons and touch icons: `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, and the Android Chrome icons.
 - `site.webmanifest` for installable browser metadata.
 - `robots.txt`, which points crawlers to `sitemap.xml`.
-- `sitemap.xml` for search engines and `sitemap.html` for people. The HTML version is linked from the site footer and is a standalone page rather than an XSLT-styled XML file, since browser XSLT support is being removed. The production site serves it at `/sitemap`.
+- `sitemap.xml` for search engines.
 - `about.txt` with the CC-BY attribution for the Twemoji-derived icon.
 
-When adding or renaming a route, update both `sitemap.xml` and `sitemap.html`.
+When adding or renaming a route, update `sitemap.xml`.
 
 ## Data pipeline
 
@@ -123,7 +123,7 @@ Every read and write is guarded. Corrupt or missing data is discarded rather tha
 ## Project layout
 
 ```text
-public/          favicons, manifest, OG image, sitemap.xml, sitemap.html, robots.txt
+public/          favicons, manifest, OG image, sitemap.xml, robots.txt
 src/
   core/          date math, seeded randomness, storage, sharing
   games/
@@ -148,7 +148,6 @@ Public endpoints:
 
 - Site: <https://words.siddhesh.cc/>
 - XML sitemap: <https://words.siddhesh.cc/sitemap.xml>
-- Human-readable sitemap: <https://words.siddhesh.cc/sitemap>
 - Robots: <https://words.siddhesh.cc/robots.txt>
 
 Word Ladder chunks are emitted as separate assets and loaded on demand, so the initial page does not download the whole ladder schedule. Do not eagerly import `src/data/ladder/` or Vite will bundle every chunk.

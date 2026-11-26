@@ -29,13 +29,6 @@ function RootComponent() {
             >
               Siddhesh Agarwal
             </a>
-            <span aria-hidden="true"> · </span>
-            <a
-              className="underline underline-offset-4 transition-colors hover:text-foreground"
-              href="/sitemap.html"
-            >
-              Sitemap
-            </a>
           </p>
         </div>
       </footer>
